@@ -1,0 +1,13 @@
+C:\Users\deced1\source\repos\CyberLife\CyberLife\bin\x64\Release\CyberLife.exe.config
+C:\Users\deced1\source\repos\CyberLife\CyberLife\bin\x64\Release\CyberLife.exe.manifest
+C:\Users\deced1\source\repos\CyberLife\CyberLife\bin\x64\Release\CyberLife.application
+C:\Users\deced1\source\repos\CyberLife\CyberLife\bin\x64\Release\CyberLife.exe
+C:\Users\deced1\source\repos\CyberLife\CyberLife\bin\x64\Release\CyberLife.pdb
+C:\Users\deced1\source\repos\CyberLife\CyberLife\obj\x64\Release\CyberLife.csprojAssemblyReference.cache
+C:\Users\deced1\source\repos\CyberLife\CyberLife\obj\x64\Release\CyberLife.MainForm.resources
+C:\Users\deced1\source\repos\CyberLife\CyberLife\obj\x64\Release\CyberLife.csproj.GenerateResource.cache
+C:\Users\deced1\source\repos\CyberLife\CyberLife\obj\x64\Release\CyberLife.csproj.CoreCompileInputs.cache
+C:\Users\deced1\source\repos\CyberLife\CyberLife\obj\x64\Release\CyberLife.exe.manifest
+C:\Users\deced1\source\repos\CyberLife\CyberLife\obj\x64\Release\CyberLife.application
+C:\Users\deced1\source\repos\CyberLife\CyberLife\obj\x64\Release\CyberLife.exe
+C:\Users\deced1\source\repos\CyberLife\CyberLife\obj\x64\Release\CyberLife.pdb

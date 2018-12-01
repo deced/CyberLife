@@ -1,0 +1,13 @@
+C:\Users\deced1\source\repos\CyberLife\CyberLife\obj\Debug\CyberLife.csprojAssemblyReference.cache
+C:\Users\deced1\source\repos\CyberLife\CyberLife\obj\Debug\CyberLife.csproj.CoreCompileInputs.cache
+C:\Users\deced1\source\repos\CyberLife\CyberLife\bin\Debug\CyberLife.exe.config
+C:\Users\deced1\source\repos\CyberLife\CyberLife\bin\Debug\CyberLife.exe
+C:\Users\deced1\source\repos\CyberLife\CyberLife\bin\Debug\CyberLife.pdb
+C:\Users\deced1\source\repos\CyberLife\CyberLife\obj\Debug\CyberLife.MainForm.resources
+C:\Users\deced1\source\repos\CyberLife\CyberLife\obj\Debug\CyberLife.csproj.GenerateResource.cache
+C:\Users\deced1\source\repos\CyberLife\CyberLife\obj\Debug\CyberLife.exe
+C:\Users\deced1\source\repos\CyberLife\CyberLife\obj\Debug\CyberLife.pdb
+C:\Users\deced1\source\repos\CyberLife\CyberLife\bin\Debug\CyberLife.exe.manifest
+C:\Users\deced1\source\repos\CyberLife\CyberLife\bin\Debug\CyberLife.application
+C:\Users\deced1\source\repos\CyberLife\CyberLife\obj\Debug\CyberLife.exe.manifest
+C:\Users\deced1\source\repos\CyberLife\CyberLife\obj\Debug\CyberLife.application
