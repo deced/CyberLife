@@ -328,7 +328,7 @@ namespace CyberLife
         /// </summary>
         /// <param name="mapsize">Карта</param>
         /// <returns>Случайная точка на карте</returns>
-        public static Place RandomPlace(MapSize mapsize)
+        public static Place RandomPlace(Map mapsize)
         {
             Place ret = new Place(PlaceType.Array, new Point(rnd.Next(0, mapsize.Width), rnd.Next(0, mapsize.Height)));
             return ret;

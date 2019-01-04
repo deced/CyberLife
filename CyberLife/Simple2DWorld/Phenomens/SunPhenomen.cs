@@ -35,7 +35,6 @@ namespace CyberLife.Simple2DWorld
 
         #endregion
 
-
         #region Methods
 
 
@@ -43,7 +42,7 @@ namespace CyberLife.Simple2DWorld
         /// Вызывает обновление интенсивности в зависимости от текущего сезона
         /// </summary>
         /// <param name="worldMetadata">Метаданные мира. В окружающей среде должен быть феномен времен года.</param>
-        public void Update(World world)
+        public void Update(Simple2DWorld world)
         {
             if (!world.NaturalPhenomena.ContainsKey("SeasonsPhenomen"))
             {
@@ -92,15 +91,16 @@ namespace CyberLife.Simple2DWorld
         /// <param name="point">Точка</param>
         /// <param name="lifeFormMetadataMetadata">метаданные форммы жизни, находящейся в этой точке</param>
         /// <returns>Эффект воздействия феномена</returns>
-        public int GetEffects(Point point)
+        public void GetEffects(BotLifeForm bot)
         {
-            Point botPoint = new Point(point.X, point.Y);
+            Point botPoint = new Point(bot.Point.X, bot.Point.Y);
             if (isIn(botPoint))
             {
                 double depthFactor = 1 / (1 + (double)(botPoint.Y - _place[0].Y) / _place[1].Y);
-                return (int)(BaseIntensity * _powerFactor * depthFactor);
+                ((BotLifeForm)bot).Energy += (int)(BaseIntensity * _powerFactor * depthFactor);
+                ((BotLifeForm)bot).LastEnergyActions.Enqueue(Actions.Photosynthesis);
             }
-            return 0;
+
         }
 
 
@@ -127,6 +127,8 @@ namespace CyberLife.Simple2DWorld
         }
 
 
+
+
         #endregion
 
 
@@ -137,17 +139,12 @@ namespace CyberLife.Simple2DWorld
         /// занимающий верхнюю половину площади карты
         /// </summary>
         /// <param name="mapSize">Размер карты</param>
-        public SunPhenomen(MapSize mapSize)
+        public SunPhenomen(int x,int y)
         {
             _powerFactor = NormalPowerFactor;
-            if (mapSize == null)
-            {
-                ArgumentNullException ex = new ArgumentNullException(nameof(mapSize));
-                throw ex;
-            }
             List<Point> points = new List<Point>(2);
             points.Add(new Point(0, 0));
-            points.Add(new Point(mapSize.Width, (int)Math.Round(mapSize.Height * SunDepthFactor)));
+            points.Add(new Point(x, (int)Math.Round(y * SunDepthFactor)));
             _place = new Place(points, PlaceType.Rectangle);
             _place.PlaceType = PlaceType.Rectangle;
         }

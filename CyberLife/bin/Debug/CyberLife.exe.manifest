@@ -42,14 +42,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="CyberLife.exe" size="36352">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="CyberLife.exe" size="39936">
       <assemblyIdentity name="CyberLife" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>sq55u9tIyEasaSnMjEWfo6+ND/xltm9nUaqLtP5dpzE=</dsig:DigestValue>
+        <dsig:DigestValue>71NZhrYf0/IXe15ByEcNsooPOqiwSt4FU0zNmfPTnlE=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

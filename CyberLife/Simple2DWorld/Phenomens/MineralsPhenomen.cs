@@ -37,15 +37,14 @@ namespace CyberLife.Simple2DWorld
         /// <param name="point">Точка</param>
         /// <param name="lifeFormMetadataMetadata">метаданные форммы жизни, находящейся в этой точке</param>
         /// <returns>Эффект воздействия феномена</returns>
-        public int GetEffects(Point point)
+        public void GetEffects(BotLifeForm bot)
         {
-            if (isIn(point))
+            if (isIn(bot.Point))
             {
-                double depthFactor = 1 / (1 + ((double)(_place[1].Y - point.Y) / _place[0].Y));
-                return (int)(BaseIntensity * depthFactor);
-
+                double depthFactor = 1 / (1 + ((double)(_place[1].Y - bot.Point.Y) / _place[0].Y));
+                ((BotLifeForm)bot).Energy += (int)(BaseIntensity * depthFactor);
+                ((BotLifeForm)bot).LastEnergyActions.Enqueue(Actions.Extraction);
             }
-            return 0;
         }
 
 
@@ -73,7 +72,7 @@ namespace CyberLife.Simple2DWorld
 
 
 
-        public void Update(World worldMetadata)
+        public void Update(Simple2DWorld worldMetadata)
         {
 
         }
@@ -88,16 +87,11 @@ namespace CyberLife.Simple2DWorld
         /// занимающий нижнюю половину площади карты
         /// </summary>
         /// <param name="mapSize">Размер карты</param>
-        public MineralsPhenomen(MapSize mapSize)
+        public MineralsPhenomen(int x,int y)
         {
-            if (mapSize == null)
-            {
-                ArgumentNullException ex = new ArgumentNullException(nameof(mapSize));
-                throw ex;
-            }
             List<Point> points = new List<Point>(2);          
-            points.Add(new Point(0,Convert.ToInt32( mapSize.Height * (100 - PercentOfMap) / 100d)));
-            points.Add(new Point(mapSize.Width, mapSize.Height));
+            points.Add(new Point(0,Convert.ToInt32(y * (100 - PercentOfMap) / 100d)));
+            points.Add(new Point(x, y));
             _place = new Place(points, PlaceType.Rectangle);
             _place.PlaceType = PlaceType.Rectangle;
         }

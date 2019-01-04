@@ -97,23 +97,25 @@
     <Compile Include="CustomPictureBox.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Interfaces\ILifeForm.cs" />
+    <Compile Include="Interfaces\IState.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Simple2DWorld\States\ColorState.cs" />
+    <Compile Include="Simple2DWorld\States\EnergyState.cs" />
+    <Compile Include="Simple2DWorld\States\GentypeState.cs" />
     <Compile Include="Simple2DWorld\Phenomens\MineralsPhenomen.cs" />
     <Compile Include="Simple2DWorld\Phenomens\SeasonsPhenomen.cs" />
     <Compile Include="Simple2DWorld\Simple2dVisualizer.cs" />
     <Compile Include="Simple2DWorld\Simple2DWorld.cs" />
     <Compile Include="Simple2DWorld\Phenomens\SunPhenomen.cs" />
-    <Compile Include="WorldContent\World.cs" />
     <Compile Include="WorldContent\BotLifeForm.cs" />
     <Compile Include="Interfaces\IPhenomen.cs" />
     <Compile Include="Interfaces\IVizualizer.cs" />
-    <Compile Include="WorldContent\MapSize.cs" />
+    <Compile Include="WorldContent\Map.cs" />
     <Compile Include="WorldContent\Place.cs" />
     <Compile Include="WorldContent\Point.cs" />
     <Compile Include="Program.cs" />

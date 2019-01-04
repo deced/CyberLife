@@ -21,21 +21,21 @@ namespace CyberLife
         delegate void Changed(string str, Bitmap map);
         Changed changed;
         Thread thread;
-        public MainForm(World simple2DWorld)
+        public MainForm(Simple2DWorld.Simple2DWorld simple2DWorld)
         {
             world = (Simple2DWorld.Simple2DWorld)simple2DWorld;
             InitializeComponent();
-            mapPicture2.Height = world.Size.Height;
-            mapPicture2.Width = world.Size.Width;
+            mapPicture2.Height = world.Map.Height;
+            mapPicture2.Width = world.Map.Width;
             this.Size = Screen.PrimaryScreen.Bounds.Size;
             while (true)
             {
-                mapPicture2.Width+= world.Size.Height;
-                mapPicture2.Height += world.Size.Width;
+                mapPicture2.Width+= world.Map.Height;
+                mapPicture2.Height += world.Map.Width;
                 if (mapPicture2.Width + 500 > this.Width || mapPicture2.Height + 100 > this.Height)
                 {
-                    mapPicture2.Width -= world.Size.Width;
-                    mapPicture2.Height -= world.Size.Height;
+                    mapPicture2.Width -= world.Map.Width;
+                    mapPicture2.Height -= world.Map.Height;
                     break;
                 }
             }
@@ -47,12 +47,12 @@ namespace CyberLife
             if (colortype)
             {
                 colortype = false;
-                BotLifeForm.colorType = ColorType.EnergyDisplay;
+                ((ColorState)world.States["ColorState"]).ColorType = ColorType.EnergyDisplay;
             }
             else
             {
                 colortype = true;
-                BotLifeForm.colorType = ColorType.Default;
+                ((ColorState)world.States["ColorState"]).ColorType = ColorType.Default;
             }
         }
         public void Invoke(string str, Bitmap map)
@@ -92,10 +92,10 @@ namespace CyberLife
             byte none = 0;
             byte descendant = 0;
             var location = e.Location;
-            if (world.LifeForms.ContainsKey(new Point(location.X / (mapPicture2.Width / world.Size.Width), location.Y / (mapPicture2.Height / world.Size.Height))))
+            if (world.Map.LifeForms[location.X / (mapPicture2.Width / world.Map.Width), location.Y / (mapPicture2.Height / world.Map.Height)] != null)
             {
-                BotLifeForm bot =(BotLifeForm) world.LifeForms[new Point(location.X / (mapPicture2.Width / world.Size.Width), location.Y / (mapPicture2.Height / world.Size.Height))];
-                infoLabel.Text = "Клетка (" + location.X / (mapPicture2.Width / world.Size.Width) + ";" + location.Y / (mapPicture2.Height / world.Size.Height) + ") содержит живого бота";
+                BotLifeForm bot = world.Map.LifeForms[location.X / (mapPicture2.Width / world.Map.Width), location.Y / (mapPicture2.Height / world.Map.Height)];
+                infoLabel.Text = "Клетка (" + location.X / (mapPicture2.Width / world.Map.Width) + ";" + location.Y / (mapPicture2.Height / world.Map.Height) + ") содержит живого бота";
                 infoLabel.Text += "\r\nЭнергия: " + bot.Energy+"\r\n";
                 for(int i = 0;i<64;i++)
                 {              
@@ -131,13 +131,13 @@ namespace CyberLife
                 }
                 infoLabel.Text += "\r\nФотосинтеза: " + ph+"\r\nЭкстракции: "+ex + "\r\nПоедания: " + eat + "\r\nПередвижения: "+move+"\r\nПроверок энергии: " + check+"\r\nОтпочковывания: "+ descendant+"\r\nНе назначено: "+none;
             }
-            else if(world.Organic.ContainsKey(new Point(location.X / (mapPicture2.Width / world.Size.Width), location.Y / (mapPicture2.Height / world.Size.Height))))
+            else if(world.Map.Organic[location.X / (mapPicture2.Width / world.Map.Width), location.Y / (mapPicture2.Height / world.Map.Height)] != null)
             {
-                infoLabel.Text = "Клетка (" + location.X / (mapPicture2.Width / world.Size.Width) + ";" + location.Y / (mapPicture2.Height / world.Size.Height) + ") содержит органику";
-                infoLabel.Text += "\r\nЭнергия: " +((BotLifeForm)world.Organic[new Point(location.X / (mapPicture2.Width / world.Size.Width), location.Y / (mapPicture2.Height / world.Size.Height))]).Energy;
+                infoLabel.Text = "Клетка (" + location.X / (mapPicture2.Width / world.Map.Width) + ";" + location.Y / (mapPicture2.Height / world.Map.Height) + ") содержит органику";
+                infoLabel.Text += "\r\nЭнергия: " + world.Map.Organic[location.X / (mapPicture2.Width / world.Map.Width), location.Y / (mapPicture2.Height / world.Map.Height)].Energy;
             }
             else
-                infoLabel.Text = "Клетка (" + location.X / (mapPicture2.Width / world.Size.Width) + ";" + location.Y / (mapPicture2.Height / world.Size.Height) + ") не содержит ботов";
+                infoLabel.Text = "Клетка (" + location.X / (mapPicture2.Width / world.Map.Width) + ";" + location.Y / (mapPicture2.Height / world.Map.Height) + ") не содержит ботов";
 
         }
 
@@ -146,8 +146,8 @@ namespace CyberLife
             while (true)
             {
                 world.Update();
-                Invoke("Кол-во форм жизни " + world.LifeForms.Count.ToString() +
-                    "\r\nКол-во органики " + world.Organic.Count.ToString() +
+                Invoke("Кол-во форм жизни " + world.Map.LifeFormsCount.ToString() +
+                    "\r\nКол-во органики " + world.Map.OrganicCount.ToString() +
                     "\r\nТекущий ход " + world.Age.ToString() +
                     "\r\nТекущий сезон " + ((SeasonsPhenomen)world.NaturalPhenomena["SeasonsPhenomen"]).CurSeason.ToString(), ((Simple2dVisualizer)world.Visualizer).Map);
 

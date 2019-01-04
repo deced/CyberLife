@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace CyberLife.Interfaces
 {
-    interface ILifeForm
+    public interface IState
     {
+        void Update(Simple2DWorld.Simple2DWorld simple2DWorld);
     }
 }

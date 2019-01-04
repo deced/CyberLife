@@ -9,7 +9,7 @@
         /// Обновить визуализацию на основании изменений мира.
         /// </summary>
         /// <param name="metadata"></param>
-        void Update(World world);
+        void Update(Simple2DWorld.Simple2DWorld world);
 
 
     }

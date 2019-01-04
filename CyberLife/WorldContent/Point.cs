@@ -1,5 +1,4 @@
-﻿using CyberLife.Interfaces;
-using CyberLife.Simple2DWorld;
+﻿using CyberLife.Simple2DWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -87,13 +86,13 @@ namespace CyberLife
 
 
 
-        public static Point RandomPoint(MapSize map, Dictionary<Point, ILifeForm> lifeForms = null)
+        public static Point RandomPoint(int x,int y, Dictionary<Point, BotLifeForm> lifeForms = null)
         {
             if (lifeForms == null)
-                return new Point(rnd.Next(0, map.Width), rnd.Next(0, map.Height));
+                return new Point(rnd.Next(0, x), rnd.Next(0, y));
             while (true)
             {
-                Point point = new Point(rnd.Next(0, map.Width), rnd.Next(0, map.Height));
+                Point point = new Point(rnd.Next(0, x), rnd.Next(0, y));
                 if (!lifeForms.ContainsKey(point))
                     return point;
             }

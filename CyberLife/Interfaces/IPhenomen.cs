@@ -16,7 +16,7 @@ namespace CyberLife
         /// метаданных окружающей среды.
         /// </summary>
         /// <param name="worldMetadata">Метаданные окружающей среды.</param>
-        void Update(World world);
+        void Update(Simple2DWorld.Simple2DWorld world);
 
         /// <summary>
         /// Получает эффекты воздействия этого феномена на точку пространства.
@@ -26,7 +26,7 @@ namespace CyberLife
         /// <param name="point">Точка пространства</param>
         /// <param name="lifeFormMetadata">Метаданные формы жизни</param>
         /// <returns></returns>
-        int GetEffects(Point point);
+        void GetEffects(BotLifeForm lifeForm);
 
         /// <summary>
         /// проверяет, попадает ли точка под воздействие этого природного явления

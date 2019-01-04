@@ -69,7 +69,7 @@ namespace CyberLife.Platform.World_content
         /// метаданных окружающей среды.
         /// </summary>
         /// <param name="world">Метаданные окружающей среды.</param>
-        public void Update(World world)
+        public void Update(Simple2DWorld.Simple2DWorld world)
         {
             _step = world.Age;
             ChangeSeason();
@@ -88,10 +88,9 @@ namespace CyberLife.Platform.World_content
 
 
 
-        public int GetEffects(Point point)
+        public void GetEffects(BotLifeForm lifeForm)
         {
             // none
-            return 0;
         }
 
         #endregion

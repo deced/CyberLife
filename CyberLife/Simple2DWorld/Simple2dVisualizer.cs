@@ -30,16 +30,17 @@ namespace CyberLife.Simple2DWorld
         /// Вызывает обновление цветов форм жизни
         /// </summary>
         /// <param name="metadata"></param>
-        public void Update(World world)
+        public void Update(Simple2DWorld world)
         {
-            map = new Bitmap(world.Size.Width, world.Size.Height);
-            foreach (var bot in world.LifeForms.Values)
+            map = new Bitmap(world.Map.Width, world.Map.Height);
+            foreach (BotLifeForm bot in world.Map)
             {
-                map.SetPixel(bot.Point.X, bot.Point.Y, ((BotLifeForm)bot).Color);
+                map.SetPixel(bot.Point.X, bot.Point.Y, bot.Color);
             }
-            foreach (var bot in ((Simple2DWorld)world).Organic.Values)
+            foreach (BotLifeForm bot in world.Map.Organic)
             {
-                map.SetPixel(bot.Point.X, bot.Point.Y, ((BotLifeForm)bot).Color);
+                if (bot != null)
+                    map.SetPixel(bot.Point.X, bot.Point.Y, bot.Color);
             }
         }
 
