@@ -48,9 +48,9 @@ namespace CyberLife.Simple2DWorld
 
         public List<byte> GetCommonGenom()
         {
-           // Random random = new Random();
+            // Random random = new Random();
             List<byte> Genom = new List<byte>
-             { 6,6,4,6,2,6,3,3,6,1,2,3,6,4,4,4,3,4,2,2,5,3,4,4,3,9,3,4,4,6,3,2,4,2,4,1,3,6,2,6,6,4,6,2,43,4,2,4,2,2,4,2,2,3,6,4,4,2,4,2,6,6,6,6 };
+ { 6,6,4,5,5,6,3,3,6,5,2,3,6,4,4,4,3,4,2,2,5,3,4,4,3,5,3,4,4,6,3,2,4,2,5,5,3,6,2,6,6,4,6,2,5,4,2,4,2,2,4,5,2,3,6,4,4,2,4,2,5,6,5,6 };
             //List<int> workingList = Enumerable.Repeat(2, 64).ToList();
             /*                     .Concat(Enumerable.Repeat(2, 10))
                                   .Concat(Enumerable.Repeat(3, 10))

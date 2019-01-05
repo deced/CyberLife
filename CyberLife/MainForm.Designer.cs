@@ -41,14 +41,14 @@
             this.sunLabel = new System.Windows.Forms.Label();
             this.mineralsLabel = new System.Windows.Forms.Label();
             this.infoLabel = new System.Windows.Forms.Label();
-            this.mapPicture2 = new CustomPictureBox();
             this.mutationPercent = new System.Windows.Forms.TrackBar();
             this.label7 = new System.Windows.Forms.Label();
             this.mutationLabel = new System.Windows.Forms.Label();
+            this.mapPicture2 = new CustomPictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.sunEnergy)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.mineralsEnergy)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.mapPicture2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.mutationPercent)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.mapPicture2)).BeginInit();
             this.SuspendLayout();
             // 
             // ColorTypeButton
@@ -188,19 +188,6 @@
             this.infoLabel.Size = new System.Drawing.Size(0, 15);
             this.infoLabel.TabIndex = 14;
             // 
-            // mapPicture2
-            // 
-            this.mapPicture2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.mapPicture2.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
-            this.mapPicture2.Location = new System.Drawing.Point(0, 0);
-            this.mapPicture2.Name = "mapPicture2";
-            this.mapPicture2.Size = new System.Drawing.Size(100, 100);
-            this.mapPicture2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.mapPicture2.TabIndex = 1;
-            this.mapPicture2.TabStop = false;
-            this.mapPicture2.MouseEnter += new System.EventHandler(this.mapPicture2_MouseEnter);
-            this.mapPicture2.MouseLeave += new System.EventHandler(this.mapPicture2_MouseLeave);
-            // 
             // mutationPercent
             // 
             this.mutationPercent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -234,6 +221,19 @@
             this.mutationLabel.TabIndex = 17;
             this.mutationLabel.Text = "label8";
             // 
+            // mapPicture2
+            // 
+            this.mapPicture2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.mapPicture2.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor;
+            this.mapPicture2.Location = new System.Drawing.Point(0, 0);
+            this.mapPicture2.Name = "mapPicture2";
+            this.mapPicture2.Size = new System.Drawing.Size(100, 100);
+            this.mapPicture2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.mapPicture2.TabIndex = 1;
+            this.mapPicture2.TabStop = false;
+            this.mapPicture2.MouseEnter += new System.EventHandler(this.mapPicture2_MouseEnter);
+            this.mapPicture2.MouseLeave += new System.EventHandler(this.mapPicture2_MouseLeave);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -261,8 +261,8 @@
             this.Load += new System.EventHandler(this.MainForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.sunEnergy)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.mineralsEnergy)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.mapPicture2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.mutationPercent)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.mapPicture2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

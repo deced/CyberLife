@@ -42,24 +42,24 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="CyberLife.exe" size="39936">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="CyberLife.exe" size="38912">
       <assemblyIdentity name="CyberLife" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>XkAiQAs/r47KYuQ9/9q35dRy6byrgQFKYdLgsJEycNw=</dsig:DigestValue>
+        <dsig:DigestValue>fbZKpNWvOK0OFWasTTOdcaBj9zP3VNn4Q/nfd8jUdL8=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
-  <file name="CyberLife.exe.config" size="186">
+  <file name="CyberLife.exe.config" size="180">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>eSEJjkfolEEv39DK/g+IzGhJd0CZjqwXxowAEpBp2AM=</dsig:DigestValue>
+      <dsig:DigestValue>obFMKcgS5/TieIZmcz9JzK9LKsSlZ0EO2uNQGC3B6yg=</dsig:DigestValue>
     </hash>
   </file>
 </asmv1:assembly>

@@ -111,13 +111,12 @@ namespace CyberLife.Simple2DWorld
         {
 
             List<Point> deadBots = new List<Point> { };
-            foreach (BotLifeForm bot in Map.LifeForms)
+            foreach (BotLifeForm bot in Map)
             {
-                if (bot != null)
                     if (bot.Dead)
                         deadBots.Add(bot.Point);
             }
-            foreach (var botPoint in deadBots)
+            foreach (Point botPoint in deadBots)
             {
                 BotLifeForm bot = (BotLifeForm)Map.LifeForms[botPoint.X, botPoint.Y];
                 Map.AddOrganic(bot);

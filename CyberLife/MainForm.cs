@@ -30,12 +30,12 @@ namespace CyberLife
             this.Size = Screen.PrimaryScreen.Bounds.Size;
             while (true)
             {
-                mapPicture2.Width+= world.Map.Height;
-                mapPicture2.Height += world.Map.Width;
+                mapPicture2.Width += world.Map.Height / 10;
+                mapPicture2.Height += world.Map.Width / 10;
                 if (mapPicture2.Width + 500 > this.Width || mapPicture2.Height + 100 > this.Height)
                 {
-                    mapPicture2.Width -= world.Map.Width;
-                    mapPicture2.Height -= world.Map.Height;
+                    mapPicture2.Width -= world.Map.Width / 10;
+                    mapPicture2.Height -= world.Map.Height / 10;
                     break;
                 }
             }
@@ -84,7 +84,7 @@ namespace CyberLife
 
         private void OnPictureBoxClicked(object sender, MouseEventArgs e)
         {
-            byte ph = 0;
+            /*byte ph = 0;
             byte ex = 0;
             byte eat = 0;
             byte check = 0;
@@ -138,7 +138,7 @@ namespace CyberLife
             }
             else
                 infoLabel.Text = "Клетка (" + location.X / (mapPicture2.Width / world.Map.Width) + ";" + location.Y / (mapPicture2.Height / world.Map.Height) + ") не содержит ботов";
-
+*/
         }
 
         public void UpdateMap()

@@ -12,10 +12,10 @@ namespace CyberLife.Simple2DWorld
     class SunPhenomen : IPhenomen
     {
         private int _baseIntensity = 100;
+        private const int PercentOfMap = 50;
         private const double NormalPowerFactor = 1;
         private const double LowPowerFactor = 0.5;
         private const double HightPowerFactor = 1.5;
-        private const double SunDepthFactor = 0.5;
 
 
         #region fields
@@ -34,6 +34,7 @@ namespace CyberLife.Simple2DWorld
 
 
         #endregion
+
 
         #region Methods
 
@@ -144,7 +145,7 @@ namespace CyberLife.Simple2DWorld
             _powerFactor = NormalPowerFactor;
             List<Point> points = new List<Point>(2);
             points.Add(new Point(0, 0));
-            points.Add(new Point(x, (int)Math.Round(y * SunDepthFactor)));
+            points.Add(new Point(x, (int)Math.Round(y * PercentOfMap/100d)));
             _place = new Place(points, PlaceType.Rectangle);
             _place.PlaceType = PlaceType.Rectangle;
         }
