@@ -9,7 +9,7 @@ namespace CyberLife.Simple2DWorld
 {
     public class BotLifeForm
     {
-        Random rnd = new Random();
+        static Random rnd = new Random();
         #region fields
 
         private List<byte> _genom;
@@ -50,7 +50,7 @@ namespace CyberLife.Simple2DWorld
         {
            // Random random = new Random();
             List<byte> Genom = new List<byte>
-             { 6,6,4,6,2,6,3,3,6,1,2,3,6,4,4,4,3,4,2,2,5,3,4,4,3,5,3,4,4,6,3,2,4,2,5,5,3,6,2,6,6,4,6,2,5,4,2,4,2,2,4,5,2,3,6,4,4,2,4,2,5,6,5,6 };
+             { 6,6,4,6,2,6,3,3,6,1,2,3,6,4,4,4,3,4,2,2,5,3,4,4,3,9,3,4,4,6,3,2,4,2,4,1,3,6,2,6,6,4,6,2,43,4,2,4,2,2,4,2,2,3,6,4,4,2,4,2,6,6,6,6 };
             //List<int> workingList = Enumerable.Repeat(2, 64).ToList();
             /*                     .Concat(Enumerable.Repeat(2, 10))
                                   .Concat(Enumerable.Repeat(3, 10))
@@ -106,7 +106,10 @@ namespace CyberLife.Simple2DWorld
             Color = byBot.Color;
             if (rnd.Next(100) < MutationPercent) 
             {
-                Genom[rnd.Next(0, 64)] = (Byte)rnd.Next(0, 64);
+                if (rnd.Next(2) == 1)
+                    Genom[rnd.Next(0, 64)] = (Byte)rnd.Next(0, 7);
+                else
+                    Genom[rnd.Next(0, 64)] = (Byte)rnd.Next(0, 64);
             }
             Energy = 300;
         }
