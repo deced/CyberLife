@@ -17,13 +17,13 @@ namespace CyberLife
     {
         public bool IsLoading;
         Simple2DWorld.Simple2DWorld world;
-        bool colortype = true;
+        byte colorType = 0;
         delegate void Changed(string str, Bitmap map);
         Changed changed;
         Thread thread;
         public MainForm(Simple2DWorld.Simple2DWorld simple2DWorld)
         {
-            world = (Simple2DWorld.Simple2DWorld)simple2DWorld;
+            world = simple2DWorld;
             InitializeComponent();
             mapPicture2.Height = world.Map.Height;
             mapPicture2.Width = world.Map.Width;
@@ -44,17 +44,13 @@ namespace CyberLife
 
         private void ColorTypeButton_Click(object sender, EventArgs e)
         {
-            if (colortype)
-            {
-                colortype = false;
-                ((ColorState)world.States["ColorState"]).ColorType = ColorType.EnergyDisplay;
-            }
-            else
-            {
-                colortype = true;
-                ((ColorState)world.States["ColorState"]).ColorType = ColorType.Default;
-            }
+            colorType++;
+            if (colorType >= 3)
+                colorType = 0;
+            ((ColorState)world.States["ColorState"]).ColorType = (ColorType)colorType;
         }
+
+
         public void Invoke(string str, Bitmap map)
         {
             changed = new Changed(Change);
@@ -84,18 +80,24 @@ namespace CyberLife
 
         private void OnPictureBoxClicked(object sender, MouseEventArgs e)
         {
-            byte ph = 0;
-            byte ex = 0;
+            byte sun = 0;
+            byte minerals = 0;
             byte eat = 0;
             byte check = 0;
             byte move = 0;
             byte none = 0;
             byte descendant = 0;
             var location = e.Location;
-            if (world.Map.LifeForms[location.X / (mapPicture2.Width / world.Map.Width), location.Y / (mapPicture2.Height / world.Map.Height)] != null)
+            int x =(int)Math.Round( location.X / (mapPicture2.Width /(double) world.Map.Width));
+            int y =(int)Math.Round( location.Y / (mapPicture2.Height / (double)world.Map.Height));
+            if (y == 1)
             {
-                BotLifeForm bot = world.Map.LifeForms[location.X / (mapPicture2.Width / world.Map.Width), location.Y / (mapPicture2.Height / world.Map.Height)];
-                infoLabel.Text = "Клетка (" + location.X / (mapPicture2.Width / world.Map.Width) + ";" + location.Y / (mapPicture2.Height / world.Map.Height) + ") содержит живого бота";
+                int i = 0;
+            }
+            if (world.Map.LifeForms[x, y] != null)
+            {
+                BotLifeForm bot = world.Map.LifeForms[x, y];
+                infoLabel.Text = "Клетка (" + x + ";" + y + ") содержит живого бота";
                 infoLabel.Text += "\r\nЭнергия: " + bot.Energy+"\r\n";
                 for(int i = 0;i<64;i++)
                 {              
@@ -106,10 +108,10 @@ namespace CyberLife
                             check++;
                             break;
                         case 2:
-                            ph++;
+                            sun++;
                             break;
                         case 3:
-                            ex++;
+                            minerals++;
                             break;
                         case 4:
                             descendant++;
@@ -129,15 +131,21 @@ namespace CyberLife
                         infoLabel.Text += "\r\n";
 
                 }
-                infoLabel.Text += "\r\nФотосинтеза: " + ph+"\r\nЭкстракции: "+ex + "\r\nПоедания: " + eat + "\r\nПередвижения: "+move+"\r\nПроверок энергии: " + check+"\r\nОтпочковывания: "+ descendant+"\r\nНе назначено: "+none;
+                infoLabel.Text += "\r\nФотосинтеза: " + sun+
+                    "\r\nЭкстракции: "+minerals + 
+                    "\r\nПоедания: " + eat + 
+                    "\r\nПередвижения: "+move+
+                    "\r\nПроверок энергии: " + check+
+                    "\r\nОтпочковывания: "+ descendant+
+                    "\r\nНе назначено: "+none;
             }
-            else if(world.Map.Organic[location.X / (mapPicture2.Width / world.Map.Width), location.Y / (mapPicture2.Height / world.Map.Height)] != null)
+            else if(world.Map.Organic[x,y] != null)
             {
-                infoLabel.Text = "Клетка (" + location.X / (mapPicture2.Width / world.Map.Width) + ";" + location.Y / (mapPicture2.Height / world.Map.Height) + ") содержит органику";
-                infoLabel.Text += "\r\nЭнергия: " + world.Map.Organic[location.X / (mapPicture2.Width / world.Map.Width), location.Y / (mapPicture2.Height / world.Map.Height)].Energy;
+                infoLabel.Text = "Клетка (" + x + ";" + y + ") содержит органику";
+                infoLabel.Text += "\r\nЭнергия: " + world.Map.Organic[x, y].Energy;
             }
             else
-                infoLabel.Text = "Клетка (" + location.X / (mapPicture2.Width / world.Map.Width) + ";" + location.Y / (mapPicture2.Height / world.Map.Height) + ") не содержит ботов";
+                infoLabel.Text = "Клетка (" + x + ";" + y + ") не содержит ботов";
 
         }
 

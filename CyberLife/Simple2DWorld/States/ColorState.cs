@@ -11,7 +11,8 @@ namespace CyberLife.Simple2DWorld
     public enum ColorType
     {
         Default = 0,
-        EnergyDisplay = 1
+        EnergyDisplay = 1,
+        GenomDisplay
     }
 
     class ColorState : IState
@@ -105,6 +106,18 @@ namespace CyberLife.Simple2DWorld
                     R = 255;
                     G = (byte)(255 - (bot.Energy / (double)MaxBotEnergy) * 255);
                     bot.Color = Color.FromArgb(R, G, B);
+                    break;
+                case ColorType.GenomDisplay: // переделать
+                    for (int i = 0; i < 64; i++) 
+                    {
+                        if (i + 2 >= 64)
+                            break;
+                        R += Convert.ToByte((bot.Genom[i] % 2));
+                        G += Convert.ToByte((bot.Genom[i + 1] % 3));
+                        B += Convert.ToByte((bot.Genom[i + 2] % 5));
+                        i += 2;
+                    }
+                    bot.Color = Color.FromArgb(R*10, G*7, B*3);
                     break;
             }
         }
