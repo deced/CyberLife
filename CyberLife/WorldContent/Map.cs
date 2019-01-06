@@ -229,7 +229,9 @@ namespace CyberLife
             foreach (BotLifeForm bot in LifeForms)
             {
                 if (bot != null)
+                {
                     yield return bot;
+                }
             }
         }
         #endregion

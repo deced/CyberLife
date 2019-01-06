@@ -42,8 +42,8 @@ namespace CyberLife.Simple2DWorld
             if (isIn(bot.Point))
             {
                 double depthFactor = 1 / (1 + ((double)(_place[1].Y - bot.Point.Y) / _place[0].Y));
-                ((BotLifeForm)bot).Energy += (int)(BaseIntensity * depthFactor);
-                ((BotLifeForm)bot).LastEnergyActions.Enqueue(Actions.Extraction);
+                bot.Energy += (int)(BaseIntensity * depthFactor);
+                bot.LastEnergyActions.Enqueue(Actions.Extraction);
             }
         }
 

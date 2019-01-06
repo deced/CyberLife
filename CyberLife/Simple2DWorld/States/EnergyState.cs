@@ -39,15 +39,15 @@ namespace CyberLife.Simple2DWorld
         {
             int height = world.Map.LifeForms.GetLength(0);
             int width = world.Map.LifeForms.GetLength(1);
-            Parallel.For(0, height, x =>
+            Parallel.For(0, height, y =>
             {
-                for (int y = 0; y < width; ++y)
+                Parallel.For(0, width, x =>
                 {
                     if (world.Map.LifeForms[x, y] != null)
                     {
                         world.Map.LifeForms[x, y].EnergyState = GetState(world.Map.LifeForms[x, y]);
                     }
-                }
+                });
             });
         }
 

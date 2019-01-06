@@ -40,6 +40,7 @@ namespace CyberLife.Simple2DWorld
         public int Energy { get => _energy; set => _energy = value; }
         public Point Point { get => _point; set => _point = value; }
         public static byte MutationPercent { get => _mutationPercent; set => _mutationPercent = value; }
+        public bool Updated { get; set; } // убрать
 
         #endregion
 
@@ -65,6 +66,12 @@ namespace CyberLife.Simple2DWorld
         }
 
 
+
+        public override string ToString()
+        {
+            return "[" + Point.X.ToString() + "|" + Point.Y.ToString() + "] Action: " + Action.ToString(); ;
+        }
+
         #endregion
 
 
@@ -82,6 +89,7 @@ namespace CyberLife.Simple2DWorld
             LastEnergyActions = new Queue<Actions> { };
             Energy = 300;
             Point = point;
+            Updated = false;
         }
 
         /// <summary>
@@ -112,7 +120,10 @@ namespace CyberLife.Simple2DWorld
                     Genom[rnd.Next(0, 64)] = (Byte)rnd.Next(0, 64);
             }
             Energy = 300;
+            Updated = false;
         }
+
+
         /// <summary>
         /// Инициирует бота базовыми состояниями и случайной точкой на карте.
         /// </summary>

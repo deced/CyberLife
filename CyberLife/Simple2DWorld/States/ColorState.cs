@@ -44,27 +44,27 @@ namespace CyberLife.Simple2DWorld
         {
             int height = world.Map.LifeForms.GetLength(0);
             int width = world.Map.LifeForms.GetLength(1);
-            Parallel.For(0, height, x =>
+            Parallel.For(0, height, y =>
             {
-                for (int y = 0; y < width; ++y)
+                Parallel.For(0, width, x =>
                 {
+                    BotLifeForm bot = world.Map.LifeForms[x, y];
                     if (world.Map.LifeForms[x, y] != null)
                     {
-                        if (!world.Map.LifeForms[x, y].Dead)
+                        if (!bot.Dead)
                         {
-                            if (world.Map.LifeForms[x, y].LastEnergyActions.Count >= 15)
-                                world.Map.LifeForms[x, y].LastEnergyActions.Dequeue();
-                            SetRGB(world.Map.LifeForms[x, y]);
+                            if (bot.LastEnergyActions.Count >= 15)
+                                bot.LastEnergyActions.Dequeue();
+                            SetRGB(bot);
                         }
                         else
                         {
-                            world.Map.LifeForms[x, y].Color = Color.FromArgb(132, 132, 132);
+                            bot.Color = Color.FromArgb(132, 132, 132);
                         }
                     }
-                }
+                });
             });
         }
-
 
 
         /// <summary>

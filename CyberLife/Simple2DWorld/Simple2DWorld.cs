@@ -144,69 +144,84 @@ namespace CyberLife.Simple2DWorld
             int Y;
             foreach (BotLifeForm bot in Map)
             {
-                bot.Energy -= 10;
-                switch (bot.Action)
+                if (!bot.Updated)
                 {
-                    case Actions.Move:
-                        X = bot.Point.X;
-                        Y = bot.Point.Y;
-                        GetXY(ref X, ref Y, bot.Direction);
-                        if (Map.IsPlaceEmpty(X, Y, out botOnPlace))
-                        {
-                            Map.Remove(bot.Point.X, bot.Point.Y);
-                            bot.Point = new Point(X, Y);
-                            Map.Add(bot);
-                        }
-                        break;
-                    case Actions.Eat:
-                        X = bot.Point.X;
-                        Y = bot.Point.Y;
-                        GetXY(ref X, ref Y, bot.Direction);
-                        if (!Map.IsPlaceEmpty(X, Y, out botOnPlace))
-                        {
-                            if (botOnPlace.Dead)
+                    bot.Energy -= 10;
+                    switch (bot.Action)
+                    {
+                        case Actions.Move:
+                            X = bot.Point.X;
+                            Y = bot.Point.Y;
+                            GetXY(ref X, ref Y, bot.Direction);
+                            if (Map.IsPlaceEmpty(X, Y, out botOnPlace))
                             {
-                                bot.Energy += botOnPlace.Energy;
-                                Map.RemoveOrganic(botOnPlace.Point.X, botOnPlace.Point.Y);
+                                Map.Remove(bot.Point.X, bot.Point.Y);
+                                bot.Point = new Point(X, Y);
+                                Map.Add(bot);
                             }
-                            else
+                            break;
+                        case Actions.Eat:
+                            X = bot.Point.X;
+                            Y = bot.Point.Y;
+                            GetXY(ref X, ref Y, bot.Direction);
+                            if (!Map.IsPlaceEmpty(X, Y, out botOnPlace))
                             {
-                                bot.Energy += (int)(botOnPlace.Energy * 0.7);
-                                Map.Remove(botOnPlace.Point.X, botOnPlace.Point.Y);
+                                if (botOnPlace.Dead)
+                                {
+                                    bot.Energy += botOnPlace.Energy;
+                                    Map.RemoveOrganic(botOnPlace.Point.X, botOnPlace.Point.Y);
+                                }
+                                else
+                                {
+                                    bot.Energy += (int)(botOnPlace.Energy * 0.7);
+                                    Map.Remove(botOnPlace.Point.X, botOnPlace.Point.Y);
+                                }
+                                bot.LastEnergyActions.Enqueue(Actions.Eat);
                             }
-                            bot.LastEnergyActions.Enqueue(Actions.Eat);
-                        }
-                        break;
-                    case Actions.DoDescendant:
-                        X = bot.Point.X;
-                        Y = bot.Point.Y;
-                        GetXY(ref X, ref Y, bot.Direction);
-                        if (Map.IsPlaceEmpty(X, Y, out botOnPlace) && bot.EnergyState == EnergyStates.CanReproduce)
-                        {
-                            Map.Add(new BotLifeForm(new Point(X, Y), ((BotLifeForm)bot)));
-                            bot.Energy -= descendantPrice;
-                        }
-                        break;
-                    case Actions.ForsedReproduction:
-                        X = bot.Point.X;
-                        Y = bot.Point.Y;
-                        if (Map.IsAroundEmpty(ref X, ref Y))
-                        {
-                            Map.Add(new BotLifeForm(new Point(X, Y), ((BotLifeForm)bot)));
-                            bot.Energy -= descendantPrice;
-                        }
-                        break;
-                    case Actions.Photosynthesis:
-                        NaturalPhenomena["SunPhenomen"].GetEffects(bot);
-                        break;
-                    case Actions.Extraction:
-                        NaturalPhenomena["MineralsPhenomen"].GetEffects(bot);
-                        break;
-                    case Actions.CheckEnergy:
-                        //todo
-                        break;
+                            break;
+                        case Actions.DoDescendant:
+                            X = bot.Point.X;
+                            Y = bot.Point.Y;
+                            GetXY(ref X, ref Y, bot.Direction);
+                            if (Map.IsPlaceEmpty(X, Y, out botOnPlace) && bot.EnergyState == EnergyStates.CanReproduce)
+                            {
+                                Map.Add(new BotLifeForm(new Point(X, Y), ((BotLifeForm)bot)));
+                                bot.Energy -= descendantPrice;
+                            }
+                            break;
+                        case Actions.ForsedReproduction:
+                            X = bot.Point.X;
+                            Y = bot.Point.Y;
+                            if (Map.IsAroundEmpty(ref X, ref Y))
+                            {
+                                Map.Add(new BotLifeForm(new Point(X, Y), ((BotLifeForm)bot)));
+                                bot.Energy -= descendantPrice;
+                            }
+                            break;
+                        case Actions.Photosynthesis:
+                            NaturalPhenomena["SunPhenomen"].GetEffects(bot);
+                            break;
+                        case Actions.Extraction:
+                            NaturalPhenomena["MineralsPhenomen"].GetEffects(bot);
+                            break;
+                        case Actions.CheckEnergy:
+                            //todo
+                            break;
+                    }
                 }
             }
+            int height = Map.LifeForms.GetLength(0);
+            int width = Map.LifeForms.GetLength(1);
+            // на первое время
+            Parallel.For(0, height, y =>
+            {
+                Parallel.For(0, width, x =>
+                { 
+                    BotLifeForm bot = Map.LifeForms[x, y];
+                    if (bot != null)
+                            bot.Updated = false;                   
+                });
+            });  
         }
 
 
