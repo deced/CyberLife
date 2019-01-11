@@ -17,9 +17,6 @@ namespace CyberLife.Simple2DWorld
 
     class ColorState : IState
     {
-        byte MaxR = 0;
-        byte MaxG = 0;
-        byte MaxB = 0;
 
         #region fields
 
@@ -122,12 +119,6 @@ namespace CyberLife.Simple2DWorld
                         i += 2;
                     }
                     bot.Color = Color.FromArgb(R*11, G*6, B*3);
-                    if (R * 11 > MaxR)
-                        MaxR =Convert.ToByte( R * 11);
-                    if (G * 6 > MaxG)
-                        MaxG = Convert.ToByte(G * 6);
-                    if (B * 3 > MaxB)
-                        MaxB = Convert.ToByte(B * 3);
                     break;
             }
         }
