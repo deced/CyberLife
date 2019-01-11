@@ -109,12 +109,12 @@ namespace CyberLife.Simple2DWorld
         /// <param name="world">Обрабатываемый мир</param>
         private void _energyReaction()
         {
-
             List<Point> deadBots = new List<Point> { };
             foreach (BotLifeForm bot in Map)
             {
-                    if (bot.Dead)
-                        deadBots.Add(bot.Point);
+                if (bot.Dead)
+                    deadBots.Add(bot.Point);
+                bot.Updated = false;
             }
             foreach (Point botPoint in deadBots)
             {
@@ -147,6 +147,7 @@ namespace CyberLife.Simple2DWorld
                 if (!bot.Updated)
                 {
                     bot.Energy -= 10;
+                    bot.Updated = true;
                     switch (bot.Action)
                     {
                         case Actions.Move:
@@ -209,19 +210,7 @@ namespace CyberLife.Simple2DWorld
                             break;
                     }
                 }
-            }
-            int height = Map.LifeForms.GetLength(0);
-            int width = Map.LifeForms.GetLength(1);
-            // на первое время
-            Parallel.For(0, height, y =>
-            {
-                Parallel.For(0, width, x =>
-                { 
-                    BotLifeForm bot = Map.LifeForms[x, y];
-                    if (bot != null)
-                            bot.Updated = false;                   
-                });
-            });  
+            }  
         }
 
 
@@ -245,28 +234,28 @@ namespace CyberLife.Simple2DWorld
             {
                 case Directions.TopLeft:
                     X--;
-                    Y++;
+                    Y--;
                     break;
                 case Directions.Top:
-                    Y++;
+                    Y--;
                     break;
                 case Directions.TopRight:
                     X++;
-                    Y++;
+                    Y--;
                     break;
                 case Directions.Right:
                     X++;
                     break;
                 case Directions.BottomRight:
                     X++;
-                    Y--;
+                    Y++;
                     break;
                 case Directions.Bottom:
-                    Y--;
+                    Y++;
                     break;
                 case Directions.BottomLeft:
                     X--;
-                    Y--;
+                    Y++;
                     break;
                 case Directions.Left:
                     X--;

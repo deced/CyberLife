@@ -17,6 +17,10 @@ namespace CyberLife.Simple2DWorld
 
     class ColorState : IState
     {
+        byte MaxR = 0;
+        byte MaxG = 0;
+        byte MaxB = 0;
+
         #region fields
 
         private ColorType _colorType;
@@ -47,7 +51,7 @@ namespace CyberLife.Simple2DWorld
             int width = world.Map.LifeForms.GetLength(1);
             Parallel.For(0, height, y =>
             {
-                Parallel.For(0, width, x =>
+                for(int x = 0;x < width;x++)
                 {
                     BotLifeForm bot = world.Map.LifeForms[x, y];
                     if (world.Map.LifeForms[x, y] != null)
@@ -63,7 +67,7 @@ namespace CyberLife.Simple2DWorld
                             bot.Color = Color.FromArgb(132, 132, 132);
                         }
                     }
-                });
+                }
             });
         }
 
@@ -117,7 +121,13 @@ namespace CyberLife.Simple2DWorld
                         B += Convert.ToByte((bot.Genom[i + 2] % 5));
                         i += 2;
                     }
-                    bot.Color = Color.FromArgb(R*10, G*7, B*3);
+                    bot.Color = Color.FromArgb(R*11, G*6, B*3);
+                    if (R * 11 > MaxR)
+                        MaxR =Convert.ToByte( R * 11);
+                    if (G * 6 > MaxG)
+                        MaxG = Convert.ToByte(G * 6);
+                    if (B * 3 > MaxB)
+                        MaxB = Convert.ToByte(B * 3);
                     break;
             }
         }

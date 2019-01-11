@@ -57,9 +57,9 @@ namespace CyberLife.Simple2DWorld
             int width = world.Map.LifeForms.GetLength(1);
             Parallel.For(0, height, y =>
             {
-                Parallel.For(0, width, x =>
-                {
-                    if (world.Map.LifeForms[x, y] != null)
+            for (int x = 0; x < width; x++)
+            {
+                if (world.Map.LifeForms[x, y] != null)
                     {
                         if (world.Map.LifeForms[x, y].EnergyState == EnergyStates.ForsedReproduction)
                         {
@@ -71,7 +71,7 @@ namespace CyberLife.Simple2DWorld
                             SetAction(world.Map.LifeForms[x, y]);
                         }
                     }
-                });
+                }
             });
         }
 

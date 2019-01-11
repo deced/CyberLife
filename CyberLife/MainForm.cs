@@ -90,10 +90,6 @@ namespace CyberLife
             var location = e.Location;
             int x =(int)Math.Round( location.X / (mapPicture2.Width /(double) world.Map.Width));
             int y =(int)Math.Round( location.Y / (mapPicture2.Height / (double)world.Map.Height));
-            if (y == 1)
-            {
-                int i = 0;
-            }
             if (world.Map.LifeForms[x, y] != null)
             {
                 BotLifeForm bot = world.Map.LifeForms[x, y];

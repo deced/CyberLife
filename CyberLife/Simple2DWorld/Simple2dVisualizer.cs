@@ -35,7 +35,7 @@ namespace CyberLife.Simple2DWorld
         {
             map = new Bitmap(world.Map.Width, world.Map.Height, PixelFormat.Format32bppArgb);
             BitmapData bmd = map.LockBits(new Rectangle(0, 0, map.Width, map.Height),
-                                  System.Drawing.Imaging.ImageLockMode.ReadWrite,
+                                  ImageLockMode.ReadWrite,
                                   map.PixelFormat);
             int PixelSize = 4; 
             unsafe

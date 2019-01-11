@@ -12,16 +12,19 @@ namespace CyberLife.Simple2DWorld
         static Random rnd = new Random();
         #region fields
 
-        private List<byte> _genom;
-        private Color _color;
-        private Queue<Actions> _lastEnergyActions;
-        private byte _YTK;
-        private Directions _direction;
-        private Actions _action;
-        private bool _dead;
-        private EnergyStates _energyState;
         private int _energy;
         private Point _point;
+        private List<byte> _genom;
+        private byte _YTK;
+        private EnergyStates _energyState;
+        private bool _dead;
+
+        private Color _color;
+        private Queue<Actions> _lastEnergyActions;
+
+        private Directions _direction;
+        private Actions _action;
+
         private static byte _mutationPercent;
 
         #endregion
@@ -29,17 +32,21 @@ namespace CyberLife.Simple2DWorld
 
         #region properties
 
-        public List<byte> Genom { get => _genom; set => _genom = value; }
-        public Color Color { get => _color; set => _color = value; }
-        public Queue<Actions> LastEnergyActions { get => _lastEnergyActions; set => _lastEnergyActions = value; }
-        public byte YTK { get => _YTK; set => _YTK = value; }
-        public Directions Direction { get => _direction; set => _direction = value; }
-        public Actions Action { get => _action; set => _action = value; }
-        public bool Dead { get => _dead; set => _dead = value; }
-        public EnergyStates EnergyState { get => _energyState; set => _energyState = value; }
         public int Energy { get => _energy; set => _energy = value; }
         public Point Point { get => _point; set => _point = value; }
+        public List<byte> Genom { get => _genom; set => _genom = value; }
+        public byte YTK { get => _YTK; set => _YTK = value; }
+        public EnergyStates EnergyState { get => _energyState; set => _energyState = value; }
+        public bool Dead { get => _dead; set => _dead = value; }
+
+        public Color Color { get => _color; set => _color = value; }
+        public Queue<Actions> LastEnergyActions { get => _lastEnergyActions; set => _lastEnergyActions = value; }
+
+        public Directions Direction { get => _direction; set => _direction = value; }
+        public Actions Action { get => _action; set => _action = value; }
+
         public static byte MutationPercent { get => _mutationPercent; set => _mutationPercent = value; }
+
         public bool Updated { get; set; } // убрать
 
         #endregion
@@ -120,7 +127,7 @@ namespace CyberLife.Simple2DWorld
                     Genom[rnd.Next(0, 64)] = (Byte)rnd.Next(0, 64);
             }
             Energy = 300;
-            Updated = false;
+            Updated = true;
         }
 
 
