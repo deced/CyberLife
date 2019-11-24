@@ -1,4 +1,5 @@
-﻿namespace CyberLife
+﻿// Hello, world!
+namespace CyberLife
 {
     partial class MainForm
     {
@@ -231,8 +232,6 @@
             this.mapPicture2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.mapPicture2.TabIndex = 1;
             this.mapPicture2.TabStop = false;
-            this.mapPicture2.MouseEnter += new System.EventHandler(this.mapPicture2_MouseEnter);
-            this.mapPicture2.MouseLeave += new System.EventHandler(this.mapPicture2_MouseLeave);
             // 
             // MainForm
             // 

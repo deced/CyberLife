@@ -38,8 +38,14 @@ namespace CyberLife
         /// </summary>
         public int CountOfPoint => _width * _height;
 
+        /// <summary>
+        /// Двумерный массив, содержащий живых ботов
+        /// </summary>
         public BotLifeForm[,] LifeForms { get => _lifeForms; set => _lifeForms = value; }
 
+        /// <summary>
+        /// Двумерный массив, содержащий органику
+        /// </summary>
         public BotLifeForm[,] Organic { get => _organic; set => _organic = value; }
 
         /// <summary>
@@ -60,13 +66,12 @@ namespace CyberLife
         /// <summary>
         /// Используется для добавления живого бота
         /// </summary>
-        /// <param name="bot"></param>
+        /// <param name="bot">Бот, который будет добавлен на карту</param>
         public void Add(BotLifeForm bot)
         {
             if (LifeForms[bot.Point.X, bot.Point.Y] != null)
-                throw new ArgumentException("Клетка уже использовна");
+                throw new ArgumentException("Клетка уже используется");
             LifeForms[bot.Point.X, bot.Point.Y] = bot;
-            LifeFormsCount++;
         }
 
 
@@ -74,14 +79,13 @@ namespace CyberLife
         /// <summary>
         /// Используется для удаления живого бота
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
+        /// <param name="x">Координата удаляемого бота по X</param>
+        /// <param name="y">Координата удаляемого бота по Y</param>
         public void Remove(int x, int y)
         {
             if (LifeForms[x, y] == null)
                 throw new ArgumentException("Клетка уже пуста");
             LifeForms[x, y] = null;
-            LifeFormsCount--;
         }
 
 
@@ -89,13 +93,12 @@ namespace CyberLife
         /// <summary>
         /// Используется для добавления органики
         /// </summary>
-        /// <param name="bot"></param>
+        /// <param name="bot">Органика, которая будет добавлена на карту</param>
         public void AddOrganic(BotLifeForm bot)
         {
             if (Organic[bot.Point.X, bot.Point.Y] != null)
-                throw new ArgumentException("Клетка уже использовна");
+                throw new ArgumentException("Клетка уже используется");
             Organic[bot.Point.X, bot.Point.Y] = bot;
-            OrganicCount++;
         }
 
 
@@ -103,14 +106,13 @@ namespace CyberLife
         /// <summary>
         /// Используется для удаления органики
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
+        /// <param name="x">Координата удаляемой органики по X</param>
+        /// <param name="y">Координата удаляемой органики по Y</param>
         public void RemoveOrganic(int x, int y)
         {
             if (Organic[x, y] == null)
                 throw new ArgumentException("Клетка уже пуста");
             Organic[x, y] = null;
-            OrganicCount--;
         }
 
 
@@ -118,10 +120,10 @@ namespace CyberLife
         /// <summary>
         /// Определяет,свободна ли выбранная клетка,и если нет,то возвращает форму жизни в данной клетке
         /// </summary>
-        /// <param name="X"></param>
-        /// <param name="Y"></param>
-        /// <param name="botOnPlace"></param>
-        /// <returns></returns>
+        /// <param name="X">Координата клетки по X</param>
+        /// <param name="Y">Координата клетки по Y</param>
+        /// <param name="botOnPlace">Экземпляр бота, находящегося в этой клетке</param>
+        /// <returns>Если клетка пуста, то возвращает true, иначе false</returns>
         public bool IsPlaceEmpty(int x, int y, out BotLifeForm bot)
         {
             if (LifeForms[x, y] != null)
@@ -138,15 +140,92 @@ namespace CyberLife
             return true;
         }
 
-
-
         /// <summary>
-        /// Определяет,есть ли вокруг данной клетки свободное пространство,возвращает bool и передаёт координаты клетки в ref параметрах,
-        /// в противном случае возвращает false и исходные координаты центральной клетки
+        /// Определяет дружеского бота с наименьшим количеством энергии
         /// </summary>
-        /// <param name="X"></param>
-        /// <param name="Y"></param>
-        /// <returns></returns>
+        /// <param name="x">Координата бота по X</param>
+        /// <param name="y">Координата бота по Y</param>
+        /// <param name="bot">Возвращаемый бот с наименьшим количеством энергии</param>
+        /// <returns>Возврачает false, если рядом нет союзного бота, иначе возвращает true</returns>
+        public bool GetLowEnergyFriend(int x, int y, out BotLifeForm lowEBot)
+        {
+
+            List<BotLifeForm> bots = new List<BotLifeForm> { };
+            BotLifeForm bot;
+            for (int i = 1; i < 4; i++)
+            {
+                if (y > Height - 1)
+                    y = Height - 1;
+                if (y < 0)
+                    y = 0;
+                if (x > Width - 1)
+                    x = 0;
+                if (x < 0)
+                    x = Width - 1;
+                if (!IsPlaceEmpty(x, y, out bot))
+                {
+                    bots.Add(bot);
+                }
+                y--;
+            }
+            x++;
+            y--;
+            for (int i = 1; i < 4; i++)
+            {
+                y++;
+                if (i == 2)
+                {
+                    continue;
+                }
+                if (y > Height - 1)
+                    y = Height - 1;
+                if (y < 0)
+                    y = 0;
+                if (x > Width - 1)
+                    x = 0;
+                if (x < 0)
+                    x = Width - 1;
+                if (!IsPlaceEmpty(x, y, out bot))
+                {
+                    bots.Add(bot);
+                }
+            }
+            x++;
+            for (int i = 1; i < 4; i++)
+            {
+                if (y > Height - 1)
+                    y = Height - 1;
+                if (y < 0)
+                    y = 0;
+                if (x > Width - 1)
+                    x = 0;
+                if (x < 0)
+                    x = Width - 1;
+                if (!IsPlaceEmpty(x, y, out bot))
+                {
+                    bots.Add(bot);
+                }
+                y--;
+            }
+            if (bots.Count == 0)
+            {
+                lowEBot = null;
+                return false;
+            }
+            lowEBot = bots[0];
+            for(int i = 1;i< bots.Count;i++)
+            {
+                if (lowEBot.Energy > bots[i].Energy)
+                    lowEBot = bots[0];
+            }
+            return true;
+        }
+        /// <summary>
+        /// Определяет,есть ли вокруг данной клетки свободное пространство
+        /// </summary>
+        /// <param name="X">Исходная координата, после выполнения метода возвращается координата свободной клетки по оси X</param>
+        /// <param name="Y">Исходная координата, после выполнения метода возвращается координата свободной клетки по оси Y</param>
+        /// <returns>Если вокруг клетки есть свободное пространство, возвращает true, иначе false</returns>
         public bool IsAroundEmpty(ref int X, ref int Y)
         {
             BotLifeForm bot = null;
@@ -221,7 +300,7 @@ namespace CyberLife
 
 
         /// <summary>
-        /// Возвращает IEnumerator для удобного взаимодействия с foreach
+        /// Возвращает IEnumerator для взаимодействия с foreach
         /// </summary>
         /// <returns></returns>
         public IEnumerator GetEnumerator()
@@ -234,6 +313,7 @@ namespace CyberLife
                 }
             }
         }
+
         #endregion
 
 
@@ -241,12 +321,12 @@ namespace CyberLife
 
         /// <summary>
         /// Инициализирует экземпляр MapSize из
-        /// размеров поля.
+        /// размеров поля, массивов форм жизни и органики.
         /// </summary>
         /// <param name="width">Ширина поля</param>
         /// <param name="height">Высота поля</param>
-        /// <param name="lifeForms">Формы жизни</param>
-        /// <param name="organic">Органика</param>
+        /// <param name="lifeForms">Массив форм жизни</param>
+        /// <param name="organic">Массив органики</param>
         public Map(int width, int height, List<BotLifeForm> lifeForms, List<BotLifeForm> organic)
         {
             if (width < 0 || height < 0)
@@ -260,6 +340,7 @@ namespace CyberLife
                 foreach (BotLifeForm bot in organic)
                 {
                     AddOrganic(bot);
+                    OrganicCount++;
                 }
             }
             if (lifeForms != null)
@@ -267,6 +348,7 @@ namespace CyberLife
                 foreach (BotLifeForm bot in lifeForms)
                 {
                     Add(bot);
+                    LifeFormsCount++;
                 }
             }
         }

@@ -1,16 +1,14 @@
 ﻿namespace CyberLife
 {
     /// <summary>
-    /// Занимается отрисовкой мира.
+    /// Релизует отрисовку мира.
     /// </summary>
     public interface IVisualizer
     {
         /// <summary>
-        /// Обновить визуализацию на основании изменений мира.
+        /// Обновляет визуализацию на основании изменений мира.
         /// </summary>
-        /// <param name="metadata"></param>
+        /// <param name="world">Мир, для которого происходит обновление</param>
         void Update(Simple2DWorld.Simple2DWorld world);
-
-
     }
 }

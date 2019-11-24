@@ -53,7 +53,7 @@ namespace CyberLife.Platform.World_content
 
 
         /// <summary>
-        /// проверяет, попадает ли точка под воздействие этого природного явления
+        /// Gроверяет, попадает ли точка под воздействие этого природного явления
         /// </summary>
         /// <param name="point">Точка пространства</param>
         /// <returns>Попадает?</returns>
@@ -66,9 +66,9 @@ namespace CyberLife.Platform.World_content
 
         /// <summary>
         /// Вызывает обновление этого природного явления на основании
-        /// метаданных окружающей среды.
+        /// окружающей среды.
         /// </summary>
-        /// <param name="world">Метаданные окружающей среды.</param>
+        /// <param name="world">Мир, для которого происходит обновление</param>
         public void Update(Simple2DWorld.Simple2DWorld world)
         {
             _step = world.Age;
@@ -88,9 +88,13 @@ namespace CyberLife.Platform.World_content
 
 
 
+        /// <summary>
+        /// Получает эффекты воздействия этого феномена на бота.
+        /// </summary>
+        /// <param name="lifeForm">Бот, который получает эффекты феномена</param>
         public void GetEffects(BotLifeForm lifeForm)
         {
-            // none
+
         }
 
         #endregion
@@ -98,6 +102,11 @@ namespace CyberLife.Platform.World_content
 
         #region constructors
 
+
+
+        /// <summary>
+        /// Инициализирует экземпляр SeasonsPhenomen
+        /// </summary>
         public SeasonsPhenomen()
         {
             _place = Place.Everything();

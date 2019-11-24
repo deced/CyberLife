@@ -41,11 +41,11 @@ namespace CyberLife.Simple2DWorld
         /// <summary>
         /// Обновляет информацию о последних действиях получения энергии формы жизни
         /// </summary>
-        /// <param name="worldMetadata"></param>
+        /// <param name="world">Мир, для которого происходит обновление</param>
         public void Update(Simple2DWorld world)
         {
-            int height = world.Map.LifeForms.GetLength(0);
-            int width = world.Map.LifeForms.GetLength(1);
+            int height = world.Map.LifeForms.GetLength(1);
+            int width = world.Map.LifeForms.GetLength(0);
             Parallel.For(0, height, y =>
             {
                 for(int x = 0;x < width;x++)
@@ -69,12 +69,13 @@ namespace CyberLife.Simple2DWorld
         }
 
 
+
         /// <summary>
         /// Устанавливает RGB в соответствии с последними действиями формы жизни
         /// </summary>
         public void SetRGB(BotLifeForm bot)
         {
-            const int MaxBotEnergy = 5000;
+            const int MaxBotEnergy = 1500;
             byte R = 0;
             byte G = 0;
             byte B = 0;
@@ -108,17 +109,11 @@ namespace CyberLife.Simple2DWorld
                     G = (byte)(255 - (bot.Energy / (double)MaxBotEnergy) * 255);
                     bot.Color = Color.FromArgb(R, G, B);
                     break;
-                case ColorType.GenomDisplay: // переделать
-                    for (int i = 0; i < 64; i++) 
-                    {
-                        if (i + 2 >= 64)
-                            break;
-                        R += Convert.ToByte((bot.Genom[i] % 2));
-                        G += Convert.ToByte((bot.Genom[i + 1] % 3));
-                        B += Convert.ToByte((bot.Genom[i + 2] % 5));
-                        i += 2;
-                    }
-                    bot.Color = Color.FromArgb(R*11, G*6, B*3);
+                case ColorType.GenomDisplay: 
+                        R = (byte)bot.FriendId;
+                        G = (byte)(bot.FriendId* bot.FriendId);
+                        B = (byte)(bot.FriendId /Math.E);
+                    bot.Color = Color.FromArgb(R,G,B);
                     break;
             }
         }
@@ -132,7 +127,6 @@ namespace CyberLife.Simple2DWorld
         {
             this._colorType = colorType;
         }
-
 
         #endregion
     }

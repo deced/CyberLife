@@ -10,6 +10,7 @@ namespace CyberLife
     public struct Point
     {
         static Random rnd = new Random();
+
         #region fields
 
         int _x;
@@ -86,6 +87,13 @@ namespace CyberLife
 
 
 
+        /// <summary>
+        /// Возвращает случайную точку
+        /// </summary>
+        /// <param name="x">Миксимум по X</param>
+        /// <param name="y">Миксимум по Y</param>
+        /// <param name="lifeForms">Формы жизни, для проверки занятых клеток</param>
+        /// <returns>Случайную точку</returns>
         public static Point RandomPoint(int x,int y, Dictionary<Point, BotLifeForm> lifeForms = null)
         {
             if (lifeForms == null)

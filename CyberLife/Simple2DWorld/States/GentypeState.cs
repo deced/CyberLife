@@ -22,13 +22,13 @@ namespace CyberLife.Simple2DWorld
     }
     public enum Actions
     {
-        CheckEnergy = 1,
-        Photosynthesis,
+        Photosynthesis = 1,
         Extraction,
         DoDescendant,
         Eat,
         Move,
-        ForsedReproduction = 7,
+        ShareEnergy,
+        ForsedReproduction = 8,
         None = 0
     }
 
@@ -50,11 +50,11 @@ namespace CyberLife.Simple2DWorld
         /// <summary>
         /// Обновляет действия бота в соответствии с геномом
         /// </summary>
-        /// <param name="metadata"></param>
+        /// <param name="world">Мир, для которого происходит обновление</param>
         public void Update(Simple2DWorld world)
         {
-            int height = world.Map.LifeForms.GetLength(0);
-            int width = world.Map.LifeForms.GetLength(1);
+            int height = world.Map.LifeForms.GetLength(1);
+            int width = world.Map.LifeForms.GetLength(0);
             Parallel.For(0, height, y =>
             {
             for (int x = 0; x < width; x++)
@@ -83,40 +83,36 @@ namespace CyberLife.Simple2DWorld
         /// <param name="lifeForm"></param>
         private void SetAction(BotLifeForm lifeForm)
         {
-            // нет реализации не конечных действий - все действия конечные
             switch (lifeForm.Genom[lifeForm.YTK])
             {
                 case 1:
-                    lifeForm.Action = Actions.CheckEnergy;
-                    NextStep(lifeForm);
-                    lifeForm.Direction = (Directions)((lifeForm.Genom[lifeForm.YTK] / 8) + 1);
-                    NextStep(lifeForm);
-                    // SetAction(lifeForm);
-                    break;
-                case 2:
                     lifeForm.Action = Actions.Photosynthesis;
                     NextStep(lifeForm);
                     break;
-                case 3:
+                case 2:
                     lifeForm.Action = Actions.Extraction;
                     NextStep(lifeForm);
                     break;
-                case 4:
+                case 3:
                     lifeForm.Action = Actions.DoDescendant;
                     NextStep(lifeForm);
                     lifeForm.Direction = (Directions)((lifeForm.Genom[lifeForm.YTK] / 8) + 1);
                     NextStep(lifeForm);
                     break;
-                case 5:
+                case 4:
                     lifeForm.Action = Actions.Eat;
                     NextStep(lifeForm);
                     lifeForm.Direction = (Directions)((lifeForm.Genom[lifeForm.YTK] / 8) + 1);
                     NextStep(lifeForm);
                     break;
-                case 6:
+                case 5:
                     lifeForm.Action = Actions.Move;
                     NextStep(lifeForm);
                     lifeForm.Direction = (Directions)((lifeForm.Genom[lifeForm.YTK] / 8) + 1);
+                    NextStep(lifeForm);
+                    break;
+                case 6:
+                    lifeForm.Action = Actions.ShareEnergy;
                     NextStep(lifeForm);
                     break;
                 default:
@@ -131,12 +127,17 @@ namespace CyberLife.Simple2DWorld
                     lifeForm.Action = Actions.None;
                     lifeForm.Direction = Directions.None;
                     NextStep(lifeForm);
-                    // SetAction(lifeForm);
                     break;
 
             }
         }
 
+
+
+        /// <summary>
+        /// Устанавливает следующее значение YTK
+        /// </summary>
+        /// <param name="bot">Бот, чей YTK сдвигается на единицу</param>
         public void NextStep(BotLifeForm bot)
         {
             bot.YTK = (byte)((bot.YTK + 1) % 64);

@@ -30,41 +30,41 @@ namespace CyberLife.Simple2DWorld
         /// <summary>
         /// Вызывает обновление цветов форм жизни
         /// </summary>
-        /// <param name="metadata"></param>
+        /// <param name="world">Мир, для которого происходит обновление</param>
         public void Update(Simple2DWorld world)
         {
-            map = new Bitmap(world.Map.Width, world.Map.Height, PixelFormat.Format32bppArgb);
-            BitmapData bmd = map.LockBits(new Rectangle(0, 0, map.Width, map.Height),
-                                  ImageLockMode.ReadWrite,
-                                  map.PixelFormat);
-            int PixelSize = 4; 
-            unsafe
-            {
-                for (int y = 0; y < bmd.Height; y++)
+                map = new Bitmap(world.Map.Width, world.Map.Height, PixelFormat.Format32bppArgb);
+                BitmapData bmd = map.LockBits(new Rectangle(0, 0, map.Width, map.Height),
+                                      ImageLockMode.ReadWrite,
+                                      map.PixelFormat);
+                int PixelSize = 4;
+                unsafe
                 {
-                    byte* row = (byte*)bmd.Scan0 + (y * bmd.Stride);
-
-                    for (int x = 0; x < bmd.Width; x++)
+                    for (int y = 0; y < bmd.Height; y++)
                     {
-                        if (world.Map.LifeForms[x, y] != null)
+                        byte* row = (byte*)bmd.Scan0 + (y * bmd.Stride);
+
+                        for (int x = 0; x < bmd.Width; x++)
                         {
-                            Color color = world.Map.LifeForms[x, y].Color;
-                            row[x * PixelSize] = color.B;   //Blue  
-                            row[x * PixelSize + 1] = color.G; //Green 
-                            row[x * PixelSize + 2] = color.R;   //Red   
-                            row[x * PixelSize + 3] = 255;  //Alpha 
-                        }
-                        else if (world.Map.Organic[x, y] != null)
-                        {
-                            row[x * PixelSize] = 132;   //Blue  
-                            row[x * PixelSize + 1] = 132; //Green 
-                            row[x * PixelSize + 2] = 132;   //Red   
-                            row[x * PixelSize + 3] = 255;  //Alpha 
+                            if (world.Map.LifeForms[x, y] != null)
+                            {
+                                Color color = world.Map.LifeForms[x, y].Color;
+                                row[x * PixelSize] = color.B;   //Blue  
+                                row[x * PixelSize + 1] = color.G; //Green 
+                                row[x * PixelSize + 2] = color.R;   //Red   
+                                row[x * PixelSize + 3] = 255;  //Alpha 
+                            }
+                            else if (world.Map.Organic[x, y] != null)
+                            {
+                                row[x * PixelSize] = 132;   //Blue  
+                                row[x * PixelSize + 1] = 132; //Green 
+                                row[x * PixelSize + 2] = 132;   //Red   
+                                row[x * PixelSize + 3] = 255;  //Alpha 
+                            }
                         }
                     }
-                }
-                map.UnlockBits(bmd);
-            }
+                    map.UnlockBits(bmd);
+                }            
         }
 
 
@@ -72,7 +72,7 @@ namespace CyberLife.Simple2DWorld
         /// <summary>
         /// Получает текущую карту
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Визуальное представление текущего мира</returns>
         public Bitmap GetMap()
         {
             return map;

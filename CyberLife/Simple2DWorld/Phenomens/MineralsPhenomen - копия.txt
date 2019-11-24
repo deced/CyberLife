@@ -9,12 +9,13 @@ namespace CyberLife.Simple2DWorld
 
     class MineralsPhenomen : IPhenomen
     {
+        private int _baseIntensity = 80;
         private const int PercentOfMap = 50;
         private const int NormalIntensity = 80;
+        private const double BotCountFactor = NormalIntensity / 45000.0; //количество энергии, которое тратится на бота
 
         #region fields
 
-        private int _baseIntensity = 110;
         private Place _place;
 
         #endregion
@@ -32,9 +33,12 @@ namespace CyberLife.Simple2DWorld
         #region Methods
 
         /// <summary>
-        /// Получает эффекты воздействия этого феномена на бота
+        /// Определяет, оказывает ли феномен воздействие на форму жизни и возвращает 
+        /// результат этого воздействия
         /// </summary>
-        /// <param name="lifeForm">Бот, который получает эффекты феномена</param>
+        /// <param name="point">Точка</param>
+        /// <param name="lifeFormMetadataMetadata">метаданные форммы жизни, находящейся в этой точке</param>
+        /// <returns>Эффект воздействия феномена</returns>
         public void GetEffects(BotLifeForm bot)
         {
             if (isIn(bot.Point))
@@ -48,7 +52,7 @@ namespace CyberLife.Simple2DWorld
 
 
         /// <summary>
-        /// Возвращает экземпляр  класса Place, представляющий пространство,
+        /// Возвращает экземпляр  класса LifeFormPlace, представляющий пространство,
         /// на  которое воздействует этот феномен
         /// </summary>
         public Place GetItPlace()
@@ -70,13 +74,9 @@ namespace CyberLife.Simple2DWorld
 
 
 
-        /// <summary>
-        /// Вызывает обновление феномена
-        /// </summary>
-        /// <param name="world">Мир, для которого происходит обновление</param>
         public void Update(Simple2DWorld world)
         {
-
+            _baseIntensity =(int)( NormalIntensity - ((world.Map.LifeFormsCount/2)* BotCountFactor));
         }
 
         #endregion
@@ -88,8 +88,7 @@ namespace CyberLife.Simple2DWorld
         /// Инициализирует экземпляр MineralsPhenomen,
         /// занимающий нижнюю половину площади карты
         /// </summary>
-        /// <param name="x">Размер мира по X</param>
-        /// <param name="y">Размер мира по Y</param>
+        /// <param name="mapSize">Размер карты</param>
         public MineralsPhenomen(int x,int y)
         {
             List<Point> points = new List<Point>(2);          

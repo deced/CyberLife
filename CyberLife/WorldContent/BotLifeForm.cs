@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CyberLife.Simple2DWorld
 {
     public class BotLifeForm
     {
+        public const int FriendlyMutations = 2; // количество мутаций, в пределах которых бот не становится чужим
         static Random rnd = new Random();
+
         #region fields
 
         private int _energy;
@@ -26,7 +25,8 @@ namespace CyberLife.Simple2DWorld
         private Actions _action;
 
         private static byte _mutationPercent;
-
+        private byte _mutationCount;
+        private int _friendId;
         #endregion
 
 
@@ -47,36 +47,55 @@ namespace CyberLife.Simple2DWorld
 
         public static byte MutationPercent { get => _mutationPercent; set => _mutationPercent = value; }
 
-        public bool Updated { get; set; } // убрать
+        public bool Updated { get; set; }
+        public int FriendId { get => _friendId; set => _friendId = value; }
 
         #endregion
 
 
         #region methods
 
-        public List<byte> GetCommonGenom()
+        /// <summary>
+        /// Определяет, принадлежат ли боты к одной колонии
+        /// </summary>
+        /// <param name="friend">Бот, чей геном сравнивается с текущим экзмепляром</param>
+        /// <returns>Принадлежат?</returns>
+        public bool IsFriend(BotLifeForm friend)
         {
-            // Random random = new Random();
-            List<byte> Genom = new List<byte>
- { 6,6,4,5,5,6,3,3,6,5,2,3,6,4,4,4,3,4,2,2,5,3,4,4,3,5,3,4,4,6,3,2,4,2,5,5,3,6,2,6,6,4,6,2,5,4,2,4,2,2,4,5,2,3,6,4,4,2,4,2,5,6,5,6 };
-            //List<int> workingList = Enumerable.Repeat(2, 64).ToList();
-            /*                     .Concat(Enumerable.Repeat(2, 10))
-                                  .Concat(Enumerable.Repeat(3, 10))
-                                  .Concat(Enumerable.Repeat(4, 10))
-                                  .Concat(Enumerable.Repeat(5, 10))
-                                .Concat(Enumerable.Repeat(6, 14)).ToList();*/
-            //  foreach (int i in workingList)
-            //  {
-            //    Genom.Add(Convert.ToByte(i));
-            // }
-            return Genom;
+            if (friend.FriendId == this.FriendId)
+                return true;
+            return false;
         }
 
 
 
+        /// <summary>
+        /// Возвращает стандартный геном, используется при создании мира
+        /// </summary>
+        /// <returns>Стандартный геном бота</returns>
+        public List<byte> GetCommonGenom()
+        {
+            Random random = new Random();
+            List<byte> genom = new List<byte> { };
+            for (int i = 0; i < 64; i++)
+            {
+                if (random.Next(3) != 1)
+                 genom.Add((byte)random.Next(7));
+                 else
+                   genom.Add((byte)random.Next(64));
+            }            
+            return genom;
+        }
+
+
+
+        /// <summary>
+        /// Возвращает строковое представление бота
+        /// </summary>
+        /// <returns>Строковое представление бота</returns>
         public override string ToString()
         {
-            return "[" + Point.X.ToString() + "|" + Point.Y.ToString() + "] Action: " + Action.ToString(); ;
+            return "[" + Point.X.ToString() + "|" + Point.Y.ToString() + "] Action: " + Action.ToString() + "; Updated: " + Updated;
         }
 
         #endregion
@@ -84,28 +103,33 @@ namespace CyberLife.Simple2DWorld
 
         #region constructors
 
-        /// <inheritdoc />
+
         /// <summary>
         /// Инициализирует форму жизни "Бот",используется при создании мира
         /// </summary>
-        /// <param name="place">Пространство, занимаемое ботом</param>
-        public BotLifeForm(Point point) 
+        /// <param name="point">Точка, занимаемая ботом</param>
+        public BotLifeForm(Point point)
         {
+            _mutationCount = 0;
             Dead = false;
             Genom = GetCommonGenom();
+            FriendId = Genom.GetHashCode();
             LastEnergyActions = new Queue<Actions> { };
             Energy = 300;
             Point = point;
             Updated = false;
         }
 
+
         /// <summary>
         /// Инициализирует форму жизни "Бот",используется при отпочковывании
         /// </summary>
-        /// <param name="point"></param>
-        /// <param name="byBot"></param>
+        /// <param name="point">Точка, потомка</param>
+        /// <param name="byBot">Родитель</param>
         public BotLifeForm(Point point, BotLifeForm byBot)
         {
+            FriendId = byBot.FriendId;
+            _mutationCount = byBot._mutationCount;
             Point = point;
             Dead = false;
             LastEnergyActions = new Queue<Actions> { };
@@ -119,12 +143,18 @@ namespace CyberLife.Simple2DWorld
                 Genom.Add(i);
             }
             Color = byBot.Color;
-            if (rnd.Next(100) < MutationPercent) 
+            if (rnd.Next(100) < MutationPercent)
             {
-                if (rnd.Next(2) == 1)
+                _mutationCount++;
+                if (rnd.Next(3) != 1)
                     Genom[rnd.Next(0, 64)] = (Byte)rnd.Next(0, 7);
                 else
                     Genom[rnd.Next(0, 64)] = (Byte)rnd.Next(0, 64);
+            }
+            if (_mutationCount >= FriendlyMutations)
+            {
+                _mutationCount = 0;
+                FriendId = Genom.GetHashCode();
             }
             Energy = 300;
             Updated = true;
@@ -134,8 +164,10 @@ namespace CyberLife.Simple2DWorld
         /// <summary>
         /// Инициирует бота базовыми состояниями и случайной точкой на карте.
         /// </summary>
-        /// <param name="mapsize">Размер карты</param>
-        public BotLifeForm(int x,int y, Dictionary<Point, BotLifeForm> bots) : this(Point.RandomPoint(x,y, bots))
+        /// <param name="x">Размер мира по X</param>
+        /// <param name="y">Размер мира по Y</param>
+        /// <param name="bots">Список ботов</param>
+        public BotLifeForm(int x, int y, Dictionary<Point, BotLifeForm> bots) : this(Point.RandomPoint(x, y, bots))
         {
 
         }

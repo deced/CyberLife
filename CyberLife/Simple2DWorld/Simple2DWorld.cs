@@ -11,19 +11,23 @@ namespace CyberLife.Simple2DWorld
 {
     public class Simple2DWorld
     {
+
         public delegate void ReactionDelegate();
         public const double OrganicZeroEnergyFactor = 0.1;
         public const double OrganicCollapseEnergyFactor = 0.3;
         public const double OutflowEnergyFactor = 0.01;
+        public const double ShareEnergyFactor = 0.2;
+        public const int PricePerStep = 20;
+        public const int DescendantPrice = 500;
 
         #region fields
 
-        protected Dictionary<string, IPhenomen> _naturalPhenomena;
+        protected Dictionary<string, IPhenomen> _naturalPhenomena; 
         protected Map _map;
         protected string _name;
         protected IVisualizer _visualizer;
         protected int _age;
-        private Dictionary<string, IState> _states;
+        protected Dictionary<string, IState> _states;
         protected Dictionary<string, ReactionDelegate> _reactions;
 
         #endregion
@@ -33,7 +37,7 @@ namespace CyberLife.Simple2DWorld
 
         public Dictionary<string, IState> States { get => _states; }
         public string Name { get => _name; set => _name = value; }
-        public IVisualizer Visualizer { get => _visualizer; set => _visualizer = value; }//todo
+        public IVisualizer Visualizer { get => _visualizer; set => _visualizer = value; }
         public int Age { get { return _age; } }
         internal Dictionary<string, IPhenomen> NaturalPhenomena { get => _naturalPhenomena; }
         internal Map Map { get => _map; }
@@ -54,9 +58,10 @@ namespace CyberLife.Simple2DWorld
             {
                 state.Update(this);
             }
-            _energyReaction();
-            _genotypeReaction();
-            _colorReaction();
+            foreach(var reaction in _reactions.Values)
+            {
+                reaction();
+            }
             _visualizer.Update(this);
             _age++;
         }
@@ -70,7 +75,7 @@ namespace CyberLife.Simple2DWorld
         /// <param name="count">Число форм жизни</param>
         /// <param name="width">Ширина карты</param>
         /// <param name="height">Высота карты</param>
-        /// <returns></returns>
+        /// <returns>Возвращает массив всех форм жизни</returns>
         private static List<BotLifeForm> _getLifeForms(int count, int width, int height)
         {
             Dictionary<Point, BotLifeForm> lifeForms = new Dictionary<Point, BotLifeForm>(count);
@@ -103,10 +108,8 @@ namespace CyberLife.Simple2DWorld
 
 
         /// <summary>
-        /// Реакция, отвечающая за изменение состояния 
-        /// EnergyState у форм жизни
+        /// Реакция, отвечающая за обновление EnergyState форм жизни
         /// </summary>
-        /// <param name="world">Обрабатываемый мир</param>
         private void _energyReaction()
         {
             List<Point> deadBots = new List<Point> { };
@@ -120,7 +123,9 @@ namespace CyberLife.Simple2DWorld
             {
                 BotLifeForm bot = (BotLifeForm)Map.LifeForms[botPoint.X, botPoint.Y];
                 Map.AddOrganic(bot);
+                Map.OrganicCount++;
                 Map.Remove(botPoint.X, botPoint.Y);
+                Map.LifeFormsCount--;
                 bot.Energy = (int)(EnergyState.MaxEnergy * (
                     bot.EnergyState == EnergyStates.EnergyCollapse ?
                         OrganicCollapseEnergyFactor :
@@ -132,89 +137,227 @@ namespace CyberLife.Simple2DWorld
 
 
         /// <summary>
-        /// Реакция, отвечающая за выполнение действий ботом
+        /// Реакция, отвечающая за выполнение команд ботами
         /// </summary>
         private void _genotypeReaction()
         {
-            const int descendantPrice = 500;
             int worldWidth = Map.Width;
             int worldHeight = Map.Height;
-            BotLifeForm botOnPlace;
-            int X;
-            int Y;
-            foreach (BotLifeForm bot in Map)
-            {
-                if (!bot.Updated)
+            for (int x = 0; x < worldWidth; x++) // однопоточное обновление
+                for (int y = 0; y < worldHeight; y++)
                 {
-                    bot.Energy -= 10;
-                    bot.Updated = true;
-                    switch (bot.Action)
+                    int X;
+                    int Y;
+                    BotLifeForm botOnPlace;
+                    BotLifeForm bot = Map.LifeForms[x, y];
+                    if (bot != null && !bot.Updated)
                     {
-                        case Actions.Move:
-                            X = bot.Point.X;
-                            Y = bot.Point.Y;
-                            GetXY(ref X, ref Y, bot.Direction);
-                            if (Map.IsPlaceEmpty(X, Y, out botOnPlace))
-                            {
-                                Map.Remove(bot.Point.X, bot.Point.Y);
-                                bot.Point = new Point(X, Y);
-                                Map.Add(bot);
-                            }
-                            break;
-                        case Actions.Eat:
-                            X = bot.Point.X;
-                            Y = bot.Point.Y;
-                            GetXY(ref X, ref Y, bot.Direction);
-                            if (!Map.IsPlaceEmpty(X, Y, out botOnPlace))
-                            {
-                                if (botOnPlace.Dead)
+                        bot.Energy -= PricePerStep;
+                        bot.Updated = true;
+                        switch (bot.Action)
+                        {
+                            case Actions.Move:
+                                X = bot.Point.X;
+                                Y = bot.Point.Y;
+                                GetXY(ref X, ref Y, bot.Direction);
+                                if (Map.IsPlaceEmpty(X, Y, out botOnPlace))
                                 {
-                                    bot.Energy += botOnPlace.Energy;
-                                    Map.RemoveOrganic(botOnPlace.Point.X, botOnPlace.Point.Y);
+                                    Map.Remove(bot.Point.X, bot.Point.Y);
+                                    bot.Point = new Point(X, Y);
+                                    Map.Add(bot);
                                 }
-                                else
+                                break;
+                            case Actions.Eat:
+                                X = bot.Point.X;
+                                Y = bot.Point.Y;
+                                GetXY(ref X, ref Y, bot.Direction);
+                                if (!Map.IsPlaceEmpty(X, Y, out botOnPlace))
                                 {
-                                    bot.Energy += (int)(botOnPlace.Energy * 0.7);
-                                    Map.Remove(botOnPlace.Point.X, botOnPlace.Point.Y);
+                                    if (botOnPlace.Dead)
+                                    {
+                                        if (bot.Energy + (int)(botOnPlace.Energy * 0.7) >= EnergyState.MaxEnergy)
+                                            bot.Energy += (int)((EnergyState.MaxEnergy - bot.Energy) * 0.5);
+                                        else
+                                            bot.Energy += botOnPlace.Energy;
+                                        Map.RemoveOrganic(botOnPlace.Point.X, botOnPlace.Point.Y);
+                                        bot.LastEnergyActions.Enqueue(Actions.Eat);
+                                        Map.OrganicCount--;
+                                    }
+                                    else
+                                    {
+                                        if (!bot.IsFriend(botOnPlace))
+                                        {
+                                            if (bot.Energy + (int)(botOnPlace.Energy * 0.7) >= EnergyState.MaxEnergy)
+                                                bot.Energy += (int)((EnergyState.MaxEnergy - bot.Energy) * 0.5);
+                                            else
+                                                bot.Energy += (int)(botOnPlace.Energy * 0.7);
+                                            Map.Remove(botOnPlace.Point.X, botOnPlace.Point.Y);
+                                            bot.LastEnergyActions.Enqueue(Actions.Eat);
+                                            Map.LifeFormsCount--;
+                                        }
+                                    }
                                 }
-                                bot.LastEnergyActions.Enqueue(Actions.Eat);
-                            }
-                            break;
-                        case Actions.DoDescendant:
-                            X = bot.Point.X;
-                            Y = bot.Point.Y;
-                            GetXY(ref X, ref Y, bot.Direction);
-                            if (Map.IsPlaceEmpty(X, Y, out botOnPlace) && bot.EnergyState == EnergyStates.CanReproduce)
-                            {
-                                Map.Add(new BotLifeForm(new Point(X, Y), ((BotLifeForm)bot)));
-                                bot.Energy -= descendantPrice;
-                            }
-                            break;
-                        case Actions.ForsedReproduction:
-                            X = bot.Point.X;
-                            Y = bot.Point.Y;
-                            if (Map.IsAroundEmpty(ref X, ref Y))
-                            {
-                                Map.Add(new BotLifeForm(new Point(X, Y), ((BotLifeForm)bot)));
-                                bot.Energy -= descendantPrice;
-                            }
-                            break;
-                        case Actions.Photosynthesis:
-                            NaturalPhenomena["SunPhenomen"].GetEffects(bot);
-                            break;
-                        case Actions.Extraction:
-                            NaturalPhenomena["MineralsPhenomen"].GetEffects(bot);
-                            break;
-                        case Actions.CheckEnergy:
-                            //todo
-                            break;
+                                break;
+                            case Actions.DoDescendant:
+                                X = bot.Point.X;
+                                Y = bot.Point.Y;
+                                GetXY(ref X, ref Y, bot.Direction);
+                                if (Map.IsPlaceEmpty(X, Y, out botOnPlace) && bot.EnergyState == EnergyStates.CanReproduce)
+                                {
+                                    Map.Add(new BotLifeForm(new Point(X, Y), bot));
+                                    bot.Energy -= DescendantPrice;
+                                    Map.LifeFormsCount++;
+                                }
+                                break;
+                            case Actions.ForsedReproduction:
+                                X = bot.Point.X;
+                                Y = bot.Point.Y;
+                                if (Map.IsAroundEmpty(ref X, ref Y))
+                                {
+                                    Map.Add(new BotLifeForm(new Point(X, Y), bot));
+                                    bot.Energy -= DescendantPrice;
+                                    Map.LifeFormsCount++;
+                                }
+                                break;
+                            case Actions.ShareEnergy:
+                                X = bot.Point.X;
+                                Y = bot.Point.Y;
+                                if (Map.GetLowEnergyFriend(X, Y, out botOnPlace))
+                                {
+                                    if (botOnPlace.Energy < EnergyState.MaxEnergy * 0.7 && bot.IsFriend(botOnPlace))
+                                    {
+                                        bot.Energy -= Convert.ToInt32(bot.Energy * 0.2);
+                                        botOnPlace.Energy += Convert.ToInt32(bot.Energy * 0.2);
+                                    }
+                                }
+                                break;
+                            case Actions.Photosynthesis:
+                                NaturalPhenomena["SunPhenomen"].GetEffects(bot);
+                                break;
+                            case Actions.Extraction:
+                                NaturalPhenomena["MineralsPhenomen"].GetEffects(bot);
+                                break;
+                        }
                     }
+                    if (x != 0 && x != worldHeight - 1 && y != worldHeight - 1)
+                        if (!(x > (worldWidth / 2) - 2 && x < (worldWidth / 2) + 2))
+                            y = worldHeight - 2;
                 }
-            }  
+            // обновление всего мира в два потока
+            Parallel.For(0, 2, i =>
+            {
+                int botCount = 0;
+                int orgCount = 0;
+                int X;
+                int Y;
+                object obj = new object();
+                BotLifeForm botOnPlace;
+                for (int x = (worldWidth / 2) * i; x < (worldWidth / 2) + ((worldWidth / 2) * i); x++)
+                    for (int y = 0; y < worldHeight; y++)
+                    {
+                        BotLifeForm bot = Map.LifeForms[x, y];
+                        if (bot != null && !bot.Updated)
+                        {
+                            bot.Energy -= PricePerStep;
+                            bot.Updated = true;
+                            switch (bot.Action)
+                            {
+                                case Actions.Move:
+                                    X = bot.Point.X;
+                                    Y = bot.Point.Y;
+                                    GetXY(ref X, ref Y, bot.Direction);
+                                    if (Map.IsPlaceEmpty(X, Y, out botOnPlace))
+                                    {
+                                        Map.Remove(bot.Point.X, bot.Point.Y);
+                                        bot.Point = new Point(X, Y);
+                                        Map.Add(bot);
+                                    }
+                                    break;
+                                case Actions.Eat:
+                                    X = bot.Point.X;
+                                    Y = bot.Point.Y;
+                                    GetXY(ref X, ref Y, bot.Direction);
+                                    if (!Map.IsPlaceEmpty(X, Y, out botOnPlace))
+                                    {
+                                        if (botOnPlace.Dead)
+                                        {
+                                            if (bot.Energy + (int)(botOnPlace.Energy * 0.7) >= EnergyState.MaxEnergy)
+                                                bot.Energy += (int)((EnergyState.MaxEnergy - bot.Energy) * 0.5);
+                                            else
+                                                bot.Energy += botOnPlace.Energy;
+                                            Map.RemoveOrganic(botOnPlace.Point.X, botOnPlace.Point.Y);
+                                            bot.LastEnergyActions.Enqueue(Actions.Eat);
+                                            orgCount--;
+                                        }
+                                        else
+                                        {
+                                            if (!bot.IsFriend(botOnPlace))
+                                            {
+                                                if (bot.Energy + (int)(botOnPlace.Energy * 0.7) >= EnergyState.MaxEnergy)
+                                                    bot.Energy += (int)((EnergyState.MaxEnergy - bot.Energy) * 0.5);
+                                                else
+                                                    bot.Energy += (int)(botOnPlace.Energy * 0.7);
+                                                Map.Remove(botOnPlace.Point.X, botOnPlace.Point.Y);
+                                                bot.LastEnergyActions.Enqueue(Actions.Eat);
+                                                botCount--;
+                                            }
+                                        }
+                                    }
+                                    break;
+                                case Actions.DoDescendant:
+                                    X = bot.Point.X;
+                                    Y = bot.Point.Y;
+                                    GetXY(ref X, ref Y, bot.Direction);
+                                    if (Map.IsPlaceEmpty(X, Y, out botOnPlace) && bot.EnergyState == EnergyStates.CanReproduce)
+                                    {
+                                        Map.Add(new BotLifeForm(new Point(X, Y), bot));
+                                        bot.Energy -= DescendantPrice;
+                                        botCount++;
+                                    }
+                                    break;
+                                case Actions.ForsedReproduction:
+                                    X = bot.Point.X;
+                                    Y = bot.Point.Y;
+                                    if (Map.IsAroundEmpty(ref X, ref Y))
+                                    {
+                                        Map.Add(new BotLifeForm(new Point(X, Y), bot));
+                                        bot.Energy -= DescendantPrice;
+                                        botCount++;
+                                    }
+                                    break;
+                                case Actions.ShareEnergy:
+                                    X = bot.Point.X;
+                                    Y = bot.Point.Y;
+                                    if (Map.GetLowEnergyFriend(X, Y, out botOnPlace))
+                                    {
+                                        if (botOnPlace.Energy < EnergyState.MaxEnergy * 0.7 && bot.IsFriend(botOnPlace))
+                                        {
+                                            bot.Energy -= Convert.ToInt32(bot.Energy * 0.2);
+                                            botOnPlace.Energy += Convert.ToInt32(bot.Energy * 0.2);
+                                        }
+                                    }
+                                    break;
+                                case Actions.Photosynthesis:
+                                    NaturalPhenomena["SunPhenomen"].GetEffects(bot);
+                                    break;
+                                case Actions.Extraction:
+                                    NaturalPhenomena["MineralsPhenomen"].GetEffects(bot);
+                                    break;
+                            }
+                        }
+                    }
+                lock (obj)
+                {
+                    Map.LifeFormsCount += botCount; // обновляем количество ботов и органики
+                    Map.OrganicCount += orgCount;
+                }
+            });
         }
 
 
-
+        /// <summary>
+        /// Обновление цвета ботов
+        /// </summary>
         private void _colorReaction()
         {
 
@@ -225,9 +368,9 @@ namespace CyberLife.Simple2DWorld
         /// <summary>
         /// Получает координаты X и Y из заданного направления
         /// </summary>
-        /// <param name="X"></param>
-        /// <param name="Y"></param>
-        /// <param name="direction"></param>
+        /// <param name="X">Исходная координата X, после выполнения метода возвращается изменённая координата</param>
+        /// <param name="Y">Исходная координата Н, после выполнения метода возвращается изменённая координата</param>
+        /// <param name="direction">Направление для смещения координат</param>
         public void GetXY(ref int X, ref int Y, Directions direction)
         {
             switch (direction)
@@ -270,7 +413,7 @@ namespace CyberLife.Simple2DWorld
             if (X > this._map.Width - 1)
                 X = 0;
             if (X < 0)
-                X = this._map.Width - 1;
+                X = this._map.Width - 1;          
         }
 
 
@@ -278,9 +421,9 @@ namespace CyberLife.Simple2DWorld
         /// <summary>
         /// Производит инициализацию феноменов
         /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <returns></returns>
+        /// <param name="x">Размер мира по X</param>
+        /// <param name="y">Размер мира по Y</param>
+        /// <returns>Возвращиет массив феноменов</returns>
         public static Dictionary<string, IPhenomen> GetPhenomens(int x, int y)
         {
             Dictionary<string, IPhenomen> ret = new Dictionary<string, IPhenomen> { };
@@ -298,15 +441,13 @@ namespace CyberLife.Simple2DWorld
 
         #region constructors
 
-        /// <inheritdoc />
         /// <summary>
         /// Инициализирует Simple2DWorld из заданных параметров
         /// </summary>
         /// <param name="name">Название мира</param>
-        /// <param name="environment">Окружающая среда мира</param>
         /// <param name="visualizer">Визуализатор для мира</param>
-        /// <param name="lifeForms">Формы жизни</param>
-        /// <param name="organic">"мертвые" формы жизни, являющиеся органикой</param>
+        /// <param name="phenomens">Список феноменов мира</param>
+        /// <param name="map">Карта мира</param>
         public Simple2DWorld(string name, IVisualizer visualizer, Dictionary<string, IPhenomen> phenomens, Map map)
         {
             _map = map;
@@ -355,6 +496,7 @@ namespace CyberLife.Simple2DWorld
             _states.Add("GenotypeState", genotype);
             _states.Add("ColorState", color);
         }
+
         #endregion
     }
 }

@@ -6,7 +6,7 @@ namespace CyberLife
 {
     /// <summary>
     /// Представляет собой способ, 
-    /// с помощью которого класс LifeFormPlace описывает пространство
+    /// с помощью которого класс Place описывает пространство
     /// </summary>
     public enum PlaceType
     {
@@ -32,6 +32,7 @@ namespace CyberLife
     public class Place
     {
         static Random rnd = new Random();
+
         #region fields
 
         private List<Point> _points;
@@ -101,7 +102,7 @@ namespace CyberLife
 
 
         /// <summary>
-        /// Проверяет, принадлежит ли точка данному экземпляру LifeFormPlace
+        /// Проверяет, принадлежит ли точка данному экземпляру Place
         /// </summary>
         /// <param name="point"></param>
         /// <returns>Принадлежит?</returns>
@@ -131,7 +132,7 @@ namespace CyberLife
         /// Определяет, задан ли данный экземпляр 
         /// класса LifeFormPlace как "все поле". 
         /// </summary>
-        /// <param name="place"></param>
+        /// <param name="place">Поле для проверки</param>
         /// <returns>Все поле?</returns>
         public static bool IsEverything(Place place)
         {
@@ -209,16 +210,12 @@ namespace CyberLife
 
 
 
-
-
-
         /// <summary>
-        /// Формирует LifeFormPlace, описывающее все поле
+        /// Формирует Place, описывающий все поле
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Экземпляр Place, описывающей все поле</returns>
         public static Place Everything()
         {
-
             return new Place((new Point[2] { new Point(-1, -1), new Point(1, 1) }).ToList(), PlaceType.Rectangle);
         }
 
@@ -228,7 +225,7 @@ namespace CyberLife
         #region constructors
 
         /// <summary>
-        /// Инициализирует экземпляр LifeFormPlace
+        /// Инициализирует экземпляр Place
         /// из множества опорных точек
         /// </summary>
         /// <param name="points">Опорные точки</param>
@@ -270,7 +267,7 @@ namespace CyberLife
 
 
         /// <summary>
-        /// Инициализирует экземпляр LifeFormPlace
+        /// Инициализирует экземпляр Place
         /// из множества опорных точек
         /// </summary>
         /// <param name="points">Опорные точки</param>
@@ -282,7 +279,7 @@ namespace CyberLife
 
 
         /// <summary>
-        /// Инициализирует экземпляр LifeFormPlace из 
+        /// Инициализирует экземпляр Place из 
         /// специальной инициализирующей строки
         /// Строка может быть получена с помощью place.ToString()
         /// </summary>
@@ -320,7 +317,6 @@ namespace CyberLife
 
 
         }
-
 
 
         /// <summary>

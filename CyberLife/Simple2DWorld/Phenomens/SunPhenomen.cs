@@ -11,7 +11,6 @@ namespace CyberLife.Simple2DWorld
 {
     class SunPhenomen : IPhenomen
     {
-        private int _baseIntensity = 100;
         private const int PercentOfMap = 50;
         private const double NormalPowerFactor = 1;
         private const double LowPowerFactor = 0.5;
@@ -20,18 +19,17 @@ namespace CyberLife.Simple2DWorld
 
         #region fields
 
+        private int _baseIntensity = 100;
         private double _powerFactor;
 
         private Place _place;
-
-        public int BaseIntensity { get { return _baseIntensity; } set { _baseIntensity = value; } }
 
         #endregion
 
 
         #region  properties
 
-
+        public int BaseIntensity { get { return _baseIntensity; } set { _baseIntensity = value; } }
 
         #endregion
 
@@ -42,7 +40,7 @@ namespace CyberLife.Simple2DWorld
         /// <summary>
         /// Вызывает обновление интенсивности в зависимости от текущего сезона
         /// </summary>
-        /// <param name="worldMetadata">Метаданные мира. В окружающей среде должен быть феномен времен года.</param>
+        /// <param name="world">Мир, для которого происходит обновление</param>
         public void Update(Simple2DWorld world)
         {
             if (!world.NaturalPhenomena.ContainsKey("SeasonsPhenomen"))
@@ -86,12 +84,9 @@ namespace CyberLife.Simple2DWorld
 
 
         /// <summary>
-        /// Определяет, оказывает ли феномен воздействие на форму жизни и возвращает 
-        /// результат этого воздействия
+        /// Определяет, оказывает ли феномен воздействие на форму жизни и оказывает это воздействие
         /// </summary>
-        /// <param name="point">Точка</param>
-        /// <param name="lifeFormMetadataMetadata">метаданные форммы жизни, находящейся в этой точке</param>
-        /// <returns>Эффект воздействия феномена</returns>
+        /// <param name="bot">Бот, получающий эффект</param>
         public void GetEffects(BotLifeForm bot)
         {
             Point botPoint = new Point(bot.Point.X, bot.Point.Y);
@@ -103,6 +98,7 @@ namespace CyberLife.Simple2DWorld
             }
 
         }
+
 
 
         /// <summary>
@@ -117,18 +113,14 @@ namespace CyberLife.Simple2DWorld
 
 
 
-        /// <inheritdoc />
         /// <summary>
-        /// Возвращает экземпляр  класса LifeFormPlace, представляющий пространство,
-        /// на  которое воздействует этот феномен
+        /// Возвращает экземпляр  класса Place, представляющий пространство,
+        /// на которое воздействует этот феномен
         /// </summary>
         public Place GetItPlace()
         {
             return _place;
         }
-
-
-
 
         #endregion
 
@@ -139,7 +131,8 @@ namespace CyberLife.Simple2DWorld
         /// Инициализирует экземпляр SunPhenomen,
         /// занимающий верхнюю половину площади карты
         /// </summary>
-        /// <param name="mapSize">Размер карты</param>
+        /// <param name="x">Размер карты по X</param>
+        /// <param name="y">Размер карты по Y</param>
         public SunPhenomen(int x,int y)
         {
             _powerFactor = NormalPowerFactor;
