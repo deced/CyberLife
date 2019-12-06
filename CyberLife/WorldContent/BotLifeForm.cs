@@ -75,14 +75,13 @@ namespace CyberLife.Simple2DWorld
         /// <returns>Стандартный геном бота</returns>
         public List<byte> GetCommonGenom()
         {
-            Random random = new Random();
             List<byte> genom = new List<byte> { };
             for (int i = 0; i < 64; i++)
             {
-                if (random.Next(3) != 1)
-                 genom.Add((byte)random.Next(7));
+                if (rnd.Next(3) != 1)
+                 genom.Add((byte)rnd.Next(7));
                  else
-                   genom.Add((byte)random.Next(64));
+                   genom.Add((byte)rnd.Next(64));
             }            
             return genom;
         }

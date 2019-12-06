@@ -19,7 +19,7 @@ namespace CyberLife.Simple2DWorld
 
         #region fields
 
-        private int _baseIntensity = 100;
+        private int _baseIntensity = 90;
         private double _powerFactor;
 
         private Place _place;

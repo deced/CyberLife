@@ -63,3 +63,16 @@ D:\Final\CyberLife\CyberLife\obj\Debug\CyberLife.exe.manifest
 D:\Final\CyberLife\CyberLife\obj\Debug\CyberLife.application
 D:\Final\CyberLife\CyberLife\obj\Debug\CyberLife.exe
 D:\Final\CyberLife\CyberLife\obj\Debug\CyberLife.pdb
+D:\cl\CyberLife\CyberLife\bin\Debug\CyberLife.exe.config
+D:\cl\CyberLife\CyberLife\bin\Debug\CyberLife.exe.manifest
+D:\cl\CyberLife\CyberLife\bin\Debug\CyberLife.application
+D:\cl\CyberLife\CyberLife\bin\Debug\CyberLife.exe
+D:\cl\CyberLife\CyberLife\bin\Debug\CyberLife.pdb
+D:\cl\CyberLife\CyberLife\obj\Debug\CyberLife.csprojAssemblyReference.cache
+D:\cl\CyberLife\CyberLife\obj\Debug\CyberLife.MainForm.resources
+D:\cl\CyberLife\CyberLife\obj\Debug\CyberLife.csproj.GenerateResource.cache
+D:\cl\CyberLife\CyberLife\obj\Debug\CyberLife.csproj.CoreCompileInputs.cache
+D:\cl\CyberLife\CyberLife\obj\Debug\CyberLife.exe.manifest
+D:\cl\CyberLife\CyberLife\obj\Debug\CyberLife.application
+D:\cl\CyberLife\CyberLife\obj\Debug\CyberLife.exe
+D:\cl\CyberLife\CyberLife\obj\Debug\CyberLife.pdb
